@@ -12,10 +12,7 @@ function App() {
       {currentPage === 'register' && <RegisterWithRecaptchaV3 />}
       
       {/* Navigation buttons cho demo */}
-      <div style={{ position: 'fixed', top: 10, right: 10, zIndex: 1000 }}>
-        <button onClick={() => setCurrentPage('login')}>Login</button>
-        <button onClick={() => setCurrentPage('register')}>Register</button>
-      </div>
+      
     </>
   )
 }
