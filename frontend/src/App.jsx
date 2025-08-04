@@ -1,19 +1,24 @@
 import { useState } from 'react'
 import './App.css'
 import Login from './Login'
-import RegisterWithRecaptchaV3 from './RegisterWithRecaptchaV3'
+import SignUp from './SignUp'
 
 function App() {
-  const [currentPage, setCurrentPage] = useState('login'); // 'login' hoặc 'register'
+  const [currentPage, setCurrentPage] = useState('login');
+
+  const switchToSignUp = () => {
+    setCurrentPage('signup');
+  };
+
+  const switchToLogin = () => {
+    setCurrentPage('login');
+  };
 
   return (
-    <>
-      {currentPage === 'login' && <Login />}
-      {currentPage === 'register' && <RegisterWithRecaptchaV3 />}
-      
-      {/* Navigation buttons cho demo */}
-      
-    </>
+    <div className="app">
+      {currentPage === 'login' && <Login onSwitchToSignUp={switchToSignUp} />}
+      {currentPage === 'signup' && <SignUp onSwitchToLogin={switchToLogin} />}
+    </div>
   )
 }
 
