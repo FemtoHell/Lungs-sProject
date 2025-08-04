@@ -23,7 +23,24 @@ export default function Login({ onSwitchToSignUp }) {
       
       if (response.ok) {
         localStorage.setItem('token', data.token);
-        alert('Đăng nhập thành công!');
+        
+        // Decode JWT để lấy user info
+        try {
+          const payload = JSON.parse(atob(data.token.split('.')[1]));
+          
+          // Check if user is admin/staff
+          if (payload.is_superuser || payload.is_staff) {
+            window.location.href = '/admin-dashboard';
+          } else {
+            // For now, show alert for non-admin users
+            alert('Chỉ admin mới có thể truy cập hệ thống này!');
+            localStorage.removeItem('token');
+          }
+        } catch (decodeError) {
+          console.error('Error decoding token:', decodeError);
+          alert('Lỗi xác thực token');
+          localStorage.removeItem('token');
+        }
       } else {
         alert(data.message || 'Đăng nhập thất bại');
       }

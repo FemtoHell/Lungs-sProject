@@ -43,11 +43,15 @@ app.use(rateLimit({
 app.get('/', (req, res) => {
   res.send('Backend is working!');
 });
+
+// Routes
 const adminRoutes = require('./src/admin.routes');
 app.use('/auth', require('./src/auth.routes'));
 app.use('/admin', adminRoutes);
-
 app.use('/auth', require('./src/oauth.routes'));
+
+// API Routes for dashboard
+// app.use('/api', require('./src/dashboard.routes'));
  
 app.use((err, req, res, next) => {
   console.error('Unhandled error:', err);
@@ -56,6 +60,7 @@ app.use((err, req, res, next) => {
     error: process.env.NODE_ENV === 'production' ? undefined : err.stack
   });
 }); 
+
 app.use((req, res) => {
   res.status(404).json({ message: 'Not found' });
 });
