@@ -1,5 +1,4 @@
 version: "3.9"
-
 services:
   ai-service:
     build: ./ai-service
@@ -19,6 +18,7 @@ services:
     environment:
       - IMAGE_API_KEY=${IMAGE_API_KEY}
       - IMAGE_API_SECRET=${IMAGE_API_SECRET}
+
   init-mongo-replica:
     image: mongo
     depends_on:
@@ -27,20 +27,23 @@ services:
     volumes:
       - ./init-replica.sh:/init-replica.sh:ro
     entrypoint: ["sh", "/init-replica.sh"]
+
   db-healthcheck:
     build: ./db-healthcheck
     environment:
-      - MONGO_URI_WRITE=mongodb://mongo-write:27017/mydb?replicaSet=rs0
-      - MONGO_URI_READ=mongodb://mongo-read:27017/mydb?replicaSet=rs0
+      # SỬA ĐỂ SỬ DỤNG lung_app THAY VÌ mydb
+      - MONGO_URI_WRITE=mongodb://mongo-write:27017/lung_app?replicaSet=rs0
+      - MONGO_URI_READ=mongodb://mongo-read:27017/lung_app?replicaSet=rs0
     depends_on:
       - mongo-write
       - mongo-read
     ports:
       - "9990:9990"
+
   frontend:
     build: ./frontend
     ports:
-      - "5173:5173"  
+      - "5173:5173"
     volumes:
       - ./frontend:/app
       - /app/node_modules
@@ -60,6 +63,7 @@ services:
     environment:
       - MONGO_URI_WRITE=mongodb://mongo-write:27017/lung_app
       - MONGO_URI_READ=mongodb://mongo-read:27017/lung_app
+      - DATABASE_NAME=lung_app  # THÊM BIẾN MÔI TRƯỜNG NÀY
       - PORT=4000
       - REDIS_HOST=redis
       - REDIS_PORT=6379
@@ -71,7 +75,6 @@ services:
       - mongo-write
       - mongo-read
       - redis
-
 
   mongo-write:
     image: mongo

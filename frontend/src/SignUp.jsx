@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './SignUp.css';
 
 const SITE_KEY = '6Lf2m5QrAAAAAI4kwN-6QCcVhzJPSYrwWKdnKFFp';
@@ -13,6 +13,21 @@ export default function SignUp({ onSwitchToLogin }) {
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
   const [isFlipping, setIsFlipping] = useState(false);
+
+  // Load reCAPTCHA script trong useEffect
+  useEffect(() => {
+    const loadRecaptcha = () => {
+      if (typeof window !== 'undefined' && !document.getElementById('recaptcha-v3-script')) {
+        const script = document.createElement('script');
+        script.id = 'recaptcha-v3-script';
+        script.src = `https://www.google.com/recaptcha/api.js?render=${SITE_KEY}`;
+        script.async = true;
+        document.head.appendChild(script);
+      }
+    };
+
+    loadRecaptcha();
+  }, []);
 
   const handleInputChange = (e) => {
     setFormData({
@@ -236,12 +251,4 @@ export default function SignUp({ onSwitchToLogin }) {
       </div>
     </div>
   );
-}
-
-// Load reCAPTCHA script
-if (typeof window !== 'undefined' && !document.getElementById('recaptcha-v3-script')) {
-  const script = document.createElement('script');
-  script.id = 'recaptcha-v3-script';
-  script.src = `https://www.google.com/recaptcha/api.js?render=${SITE_KEY}`;
-  document.head.appendChild(script);
 }

@@ -1,6 +1,31 @@
-.app {
-  width: 100vw;
+/* Thêm vào App.css */
+.app-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 100vh;
-  margin: 0;
-  padding: 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.loading-spinner {
+  color: white;
+  font-size: 1.2rem;
+  padding: 2rem;
+  text-align: center;
+}
+
+.loading-spinner:after {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }

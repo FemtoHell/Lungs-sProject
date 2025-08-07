@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Login.css';
 
-export default function Login({ onSwitchToSignUp }) {
+export default function Login({ onSwitchToSignUp, onLoginSuccess }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
@@ -23,7 +23,8 @@ export default function Login({ onSwitchToSignUp }) {
       
       if (response.ok) {
         localStorage.setItem('token', data.token);
-        alert('Đăng nhập thành công!');
+        // Gọi callback để chuyển đến dashboard với thông tin user
+        onLoginSuccess(data.user || { email });
       } else {
         alert(data.message || 'Đăng nhập thất bại');
       }
