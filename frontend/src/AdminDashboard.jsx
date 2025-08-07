@@ -12,24 +12,43 @@ export default function AdminDashboard() {
     systemUptime: 0
   });
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        setUser(payload);
-        
-        if (currentPage === 'dashboard') {
-          loadDashboardData();
-        }
-      } catch (error) {
-        console.error('Error decoding token:', error);
+ useEffect(() => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      console.log('🔍 Decoded JWT payload:', payload); // Debug log
+      
+      // Check if token is expired
+      const now = Math.floor(Date.now() / 1000);
+      if (payload.exp && payload.exp < now) {
+        console.log('❌ Token expired');
         handleLogout();
+        return;
       }
-    } else {
-      window.location.href = '/login';
+      
+      // Check if user has admin privileges
+      if (!payload.is_superuser && !payload.is_staff) {
+        console.log('❌ User does not have admin privileges');
+        alert('Access denied. Administrator privileges required.');
+        handleLogout();
+        return;
+      }
+      
+      setUser(payload);
+      
+      if (currentPage === 'dashboard') {
+        loadDashboardData();
+      }
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      handleLogout();
     }
-  }, [currentPage]);
+  } else {
+    console.log('❌ No token found, redirecting to login');
+    handleLogout();
+  }
+}, [currentPage]);
 
   const loadDashboardData = async () => {
     try {

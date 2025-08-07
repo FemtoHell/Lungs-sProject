@@ -8,6 +8,7 @@ export default function UserManagement() {
   const [filterStatus, setFilterStatus] = useState('All');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [totalUsers, setTotalUsers] = useState(0);
   const [showAddModal, setShowAddModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -24,32 +25,92 @@ export default function UserManagement() {
   }, [currentPage, filterRole, filterStatus]);
 
   const loadUsers = async () => {
+    console.log('🔄 Loading users...');
+    setLoading(true);
+    setError(''); // Clear previous errors
+    
     try {
       const token = localStorage.getItem('token');
+      
+      if (!token) {
+        console.log('❌ No authentication token found');
+        setError('Authentication required. Please login again.');
+        setLoading(false);
+        return;
+      }
+      
+      console.log('🎫 Token found, making request...');
+      
       const params = new URLSearchParams({
-        page: currentPage,
-        limit: 10,
+        page: currentPage.toString(),
+        limit: '10',
         role: filterRole !== 'All Roles' ? filterRole : '',
         status: filterStatus !== 'All' ? filterStatus : ''
       });
 
+      console.log('🔍 Request params:', Object.fromEntries(params));
+
       const response = await fetch(`/admin/users?${params}`, {
-        headers: { 'Authorization': `Bearer ${token}` }
+        method: 'GET',
+        headers: { 
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
       });
+
+      console.log('📡 Response status:', response.status);
+      console.log('📡 Response ok:', response.ok);
 
       if (response.ok) {
         const data = await response.json();
+        console.log('✅ Users data received:', {
+          users: data.users?.length || 0,
+          totalUsers: data.totalUsers,
+          totalPages: data.totalPages,
+          message: data.message
+        });
+        
         setUsers(data.users || []);
         setTotalPages(data.totalPages || 1);
+        setTotalUsers(data.totalUsers || 0);
+        setError(''); // Clear any previous errors
+        
+        // Show message if collection doesn't exist
+        if (data.message) {
+          console.log('ℹ️ Info message:', data.message);
+        }
+        
       } else {
-        console.error('Failed to load users');
-        setError('Failed to load users');
+        // Handle specific HTTP errors
+        const errorData = await response.json().catch(() => ({}));
+        console.log('❌ Error response:', errorData);
+        
+        if (response.status === 401) {
+          setError('Authentication failed. Please login again.');
+          localStorage.removeItem('token');
+          setTimeout(() => {
+            window.location.href = '/';
+          }, 2000);
+        } else if (response.status === 403) {
+          setError('Access denied. Administrator privileges required.');
+        } else if (response.status === 500) {
+          setError(`Server error: ${errorData.message || 'Internal server error'}`);
+        } else {
+          setError(errorData.message || `Failed to load users (HTTP ${response.status})`);
+        }
       }
+      
     } catch (error) {
-      console.error('Error loading users:', error);
-      setError('Error loading users');
+      console.error('❌ Network/Connection error:', error);
+      
+      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        setError('Connection failed. Please check if the server is running.');
+      } else {
+        setError(`Network error: ${error.message}`);
+      }
     } finally {
       setLoading(false);
+      console.log('✅ Load users completed');
     }
   };
 
@@ -72,10 +133,12 @@ export default function UserManagement() {
       } else {
         const data = await response.json();
         setError(data.message || 'Error updating user status');
+        setTimeout(() => setError(''), 5000);
       }
     } catch (error) {
       console.error('Error updating user status:', error);
       setError('Error updating user status');
+      setTimeout(() => setError(''), 5000);
     }
   };
 
@@ -95,15 +158,19 @@ export default function UserManagement() {
         } else {
           const data = await response.json();
           setError(data.message || 'Error deleting user');
+          setTimeout(() => setError(''), 5000);
         }
       } catch (error) {
         console.error('Error deleting user:', error);
         setError('Error deleting user');
+        setTimeout(() => setError(''), 5000);
       }
     }
   };
 
   const validateForm = () => {
+    setError(''); // Clear previous errors
+    
     if (!newUser.email) {
       setError('Email is required');
       return false;
@@ -112,7 +179,7 @@ export default function UserManagement() {
       setError('Password must be at least 6 characters');
       return false;
     }
-    if (!newUser.email.includes('@')) {
+    if (!newUser.email.includes('@') || !newUser.email.includes('.')) {
       setError('Please enter a valid email address');
       return false;
     }
@@ -121,14 +188,14 @@ export default function UserManagement() {
 
   const handleAddUser = async (e) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
     
     if (!validateForm()) {
       return;
     }
 
     setIsSubmitting(true);
+    setError('');
+    setSuccess('');
     
     try {
       const token = localStorage.getItem('token');
@@ -174,11 +241,13 @@ export default function UserManagement() {
   };
 
   const getUserId = (user, index) => {
-    if (user.is_superuser) return `ADM-${String(index + 1).padStart(3, '0')}`;
-    if (user.is_staff) return `DR-${String(index + 1).padStart(3, '0')}`;
-    return `PAT-${String(index + 1).padStart(3, '0')}`;
+    const baseIndex = ((currentPage - 1) * 10) + index + 1;
+    if (user.is_superuser) return `ADM-${String(baseIndex).padStart(3, '0')}`;
+    if (user.is_staff) return `DR-${String(baseIndex).padStart(3, '0')}`;
+    return `PAT-${String(baseIndex).padStart(3, '0')}`;
   };
 
+  // Loading state
   if (loading) {
     return (
       <div className="loading-container">
@@ -225,7 +294,10 @@ export default function UserManagement() {
             <label>Role</label>
             <select 
               value={filterRole} 
-              onChange={(e) => setFilterRole(e.target.value)}
+              onChange={(e) => {
+                setFilterRole(e.target.value);
+                setCurrentPage(1); // Reset to first page when filtering
+              }}
               className="filter-select"
             >
               <option>All Roles</option>
@@ -241,21 +313,30 @@ export default function UserManagement() {
               <label className="radio-label">
                 <input type="radio" name="status" value="All"
                   checked={filterStatus === 'All'}
-                  onChange={(e) => setFilterStatus(e.target.value)} />
+                  onChange={(e) => {
+                    setFilterStatus(e.target.value);
+                    setCurrentPage(1);
+                  }} />
                 <span className="radio-custom"></span>
                 All
               </label>
               <label className="radio-label">
                 <input type="radio" name="status" value="Active"
                   checked={filterStatus === 'Active'}
-                  onChange={(e) => setFilterStatus(e.target.value)} />
+                  onChange={(e) => {
+                    setFilterStatus(e.target.value);
+                    setCurrentPage(1);
+                  }} />
                 <span className="radio-custom"></span>
                 Active
               </label>
               <label className="radio-label">
                 <input type="radio" name="status" value="Suspended"
                   checked={filterStatus === 'Suspended'}
-                  onChange={(e) => setFilterStatus(e.target.value)} />
+                  onChange={(e) => {
+                    setFilterStatus(e.target.value);
+                    setCurrentPage(1);
+                  }} />
                 <span className="radio-custom"></span>
                 Suspended
               </label>
@@ -356,7 +437,11 @@ export default function UserManagement() {
                     <div className="no-data-content">
                       <span className="no-data-icon">👥</span>
                       <p>No users found</p>
-                      <small>Try adjusting your filters or add a new user</small>
+                      <small>
+                        {totalUsers === 0 
+                          ? "The user database is empty. Click 'Add New User' to create the first user." 
+                          : "Try adjusting your filters or add a new user"}
+                      </small>
                     </div>
                   </td>
                 </tr>
@@ -369,7 +454,7 @@ export default function UserManagement() {
       <div className="pagination-card">
         <div className="pagination">
           <span className="pagination-info">
-            Showing {users.length} of {users.length} users
+            Showing {users.length} of {totalUsers} users
           </span>
           <div className="pagination-controls">
             <button 
