@@ -764,6 +764,8 @@
   animation: spin 1s linear infinite;
 }
 
+
+
 /* Responsive */
 @media (max-width: 768px) {
   .user-management {
@@ -873,4 +875,29 @@
   .btn-primary {
     width: 100%;
   }
+}
+
+
+/* THÊM SCROLL CHO LOGS MANAGEMENT */
+.activity-page {
+  height: calc(100vh - 100px);
+  overflow-y: auto;
+}
+
+/* Style scrollbar cho activity page */
+.activity-page::-webkit-scrollbar {
+  width: 8px;
+}
+
+.activity-page::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.activity-page::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.activity-page::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }

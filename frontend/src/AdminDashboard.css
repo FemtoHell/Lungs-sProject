@@ -1,3 +1,7 @@
+/* SMOOTH SCROLLING */
+* {
+  scroll-behavior: smooth;
+}
 .admin-dashboard {
   display: flex;
   height: 100vh;
@@ -598,4 +602,43 @@
     font-size: 0.75rem;
     padding: 0.4rem 0.8rem;
   }
+
+  
+}
+
+/* THÊM SCROLL CHO ADMIN DASHBOARD */
+.main-content {
+  height: 100vh;
+}
+
+.dashboard-content {
+  height: calc(100vh - 100px);
+  overflow-y: auto;
+}
+
+.page-content {
+  height: calc(100vh - 100px);
+  overflow-y: auto;
+}
+
+/* Style scrollbar */
+.dashboard-content::-webkit-scrollbar,
+.page-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dashboard-content::-webkit-scrollbar-track,
+.page-content::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.dashboard-content::-webkit-scrollbar-thumb,
+.page-content::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.dashboard-content::-webkit-scrollbar-thumb:hover,
+.page-content::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }

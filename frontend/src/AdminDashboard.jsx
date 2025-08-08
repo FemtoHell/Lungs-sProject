@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './AdminDashboard.css';
 import UserManagement from './UserManagement';
+import LogsManagement from './LogsManagement';
+import Settings from './Settings';
 
 export default function AdminDashboard() {
   const [user, setUser] = useState(null);
@@ -79,22 +81,22 @@ export default function AdminDashboard() {
     return <div className="loading">Loading...</div>;
   }
 
-  const renderContent = () => {
-    switch (currentPage) {
-      case 'users':
-        return <UserManagement />;
-      case 'logs':
-        return <div className="page-content"><h1>System Logs</h1><p>Logs management coming soon...</p></div>;
-      case 'settings':
-        return <div className="page-content"><h1>Settings</h1><p>System settings coming soon...</p></div>;
-      case 'security':
-        return <div className="page-content"><h1>Security</h1><p>Security settings coming soon...</p></div>;
-      case 'help':
-        return <div className="page-content"><h1>Help</h1><p>Help documentation coming soon...</p></div>;
-      default:
-        return renderDashboard();
-    }
-  };
+ const renderContent = () => {
+  switch (currentPage) {
+    case 'users':
+      return <UserManagement />;
+    case 'logs':
+      return <LogsManagement />;
+    case 'settings':
+      return <Settings />; // Thay thế placeholder
+    case 'security':
+      return <div className="page-content"><h1>Security</h1><p>Security settings coming soon...</p></div>;
+    case 'help':
+      return <div className="page-content"><h1>Help</h1><p>Help documentation coming soon...</p></div>;
+    default:
+      return renderDashboard();
+  }
+};
 
   const renderDashboard = () => (
     <div className="dashboard-content">
