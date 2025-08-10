@@ -3,6 +3,7 @@ import './App.css'
 import Login from './Login'
 import SignUp from './SignUp'
 import AdminDashboard from './AdminDashboard'
+import DoctorDashboard from './DoctorDashboard' // ✅ THÊM IMPORT
 
 function App() {
   const [currentPage, setCurrentPage] = useState('login');
@@ -21,7 +22,33 @@ function App() {
       .then(data => {
         if (data.user) {
           setUser(data.user);
-          setCurrentPage('dashboard');
+          
+          // ✅ THÊM ROLE-BASED ROUTING
+          // Decode JWT để lấy role info chính xác
+          try {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            
+            if (payload.is_superuser) {
+              console.log('🔐 Admin user detected, routing to AdminDashboard');
+              setCurrentPage('admin-dashboard');
+            } else if (payload.is_staff && !payload.is_superuser) {
+              console.log('👨‍⚕️ Doctor user detected, routing to DoctorDashboard');
+              setCurrentPage('doctor-dashboard');
+            } else {
+              console.log('👤 Patient user detected, routing to patient area');
+              setCurrentPage('patient-dashboard'); // Coming soon
+            }
+          } catch (error) {
+            console.error('Error decoding token for routing:', error);
+            // Fallback: route based on data.user if available
+            if (data.user.is_superuser) {
+              setCurrentPage('admin-dashboard');
+            } else if (data.user.is_staff) {
+              setCurrentPage('doctor-dashboard');
+            } else {
+              setCurrentPage('patient-dashboard');
+            }
+          }
         } else {
           localStorage.removeItem('token');
         }
@@ -42,7 +69,32 @@ function App() {
   
   const handleLoginSuccess = (userData) => {
     setUser(userData);
-    setCurrentPage('dashboard');
+    
+    // ✅ THÊM ROLE-BASED ROUTING SAU LOGIN
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        
+        if (payload.is_superuser) {
+          console.log('🔐 Admin login success, routing to AdminDashboard');
+          setCurrentPage('admin-dashboard');
+        } else if (payload.is_staff && !payload.is_superuser) {
+          console.log('👨‍⚕️ Doctor login success, routing to DoctorDashboard');
+          setCurrentPage('doctor-dashboard');
+        } else {
+          console.log('👤 Patient login success, routing to patient area');
+          setCurrentPage('patient-dashboard');
+        }
+      } catch (error) {
+        console.error('Error decoding token after login:', error);
+        // Fallback to admin dashboard
+        setCurrentPage('admin-dashboard');
+      }
+    } else {
+      // Fallback if no token
+      setCurrentPage('admin-dashboard');
+    }
   };
 
   const handleLogout = () => {
@@ -71,11 +123,35 @@ function App() {
       {currentPage === 'signup' && (
         <SignUp onSwitchToLogin={switchToLogin} />
       )}
-      {currentPage === 'dashboard' && (
+      
+      {/* ✅ ADMIN DASHBOARD - CHỈ CHO SUPERUSER */}
+      {currentPage === 'admin-dashboard' && (
         <AdminDashboard 
           user={user} 
           onLogout={handleLogout} 
         />
+      )}
+      
+      {/* ✅ DOCTOR DASHBOARD - CHỈ CHO STAFF (KHÔNG PHẢI SUPERUSER) */}
+      {currentPage === 'doctor-dashboard' && (
+        <DoctorDashboard 
+          user={user} 
+          onLogout={handleLogout} 
+        />
+      )}
+      
+      {/* ✅ PATIENT DASHBOARD - CHO REGULAR USERS */}
+      {currentPage === 'patient-dashboard' && (
+        <div className="patient-coming-soon">
+          <div className="coming-soon-content">
+            <h1>👤 Patient Dashboard</h1>
+            <p>Patient interface is coming soon...</p>
+            <p>Welcome, {user?.full_name || user?.email || 'Patient'}!</p>
+            <button className="logout-btn" onClick={handleLogout}>
+              Logout
+            </button>
+          </div>
+        </div>
       )}
     </div>
   )
