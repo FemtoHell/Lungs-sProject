@@ -238,7 +238,7 @@
   border-color: #3b82f6;
 }
 
-/* Table */
+/* Table - Thêm horizontal scroll wrapper */
 .table-card {
   background: white;
   border-radius: 16px;
@@ -248,8 +248,15 @@
   margin-bottom: 1.5rem;
 }
 
+/* Wrapper cho horizontal scroll */
+.table-wrapper {
+  overflow-x: auto;
+  overflow-y: visible;
+}
+
 .users-table table {
   width: 100%;
+  min-width: 800px; /* Đảm bảo table có độ rộng tối thiểu */
   border-collapse: collapse;
 }
 
@@ -258,6 +265,7 @@
   padding: 1.25rem;
   text-align: left;
   border-bottom: 1px solid #f1f5f9;
+  white-space: nowrap; /* Ngăn text wrap */
 }
 
 .users-table th {
@@ -267,6 +275,9 @@
   font-size: 0.875rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .users-table tbody tr:hover {
@@ -277,82 +288,135 @@
   border-bottom: none;
 }
 
+/* User ID - Cập nhật style giống Figma */
 .user-id {
-  font-family: 'Monaco', 'Menlo', monospace;
-  font-size: 0.8rem;
-  background: #f1f5f9;
-  padding: 0.25rem 0.5rem;
-  border-radius: 6px;
-  color: #64748b;
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
   font-weight: 600;
+  color: #1e293b;
+  font-size: 0.85rem;
+  background: #f8fafc;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #e2e8f0;
 }
 
 .user-info {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  min-width: 200px; /* Đảm bảo có đủ không gian */
 }
 
+/* Avatar - Cập nhật thành hình tròn giống Figma */
 .user-avatar {
   width: 40px;
   height: 40px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 10px;
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  border-radius: 50%; /* Thay đổi từ border-radius: 10px thành 50% */
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
   color: white;
   font-size: 0.9rem;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+/* Style cho ảnh avatar */
+.user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 .user-details {
   display: flex;
   flex-direction: column;
   gap: 0.125rem;
+  min-width: 0;
 }
 
 .user-name {
   font-weight: 600;
   color: #1e293b;
   font-size: 0.9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .user-email-small {
   font-size: 0.8rem;
   color: #64748b;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
+.user-email {
+  color: #64748b;
+  font-size: 0.9rem;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Role Badges - Cập nhật theo Figma */
 .role-badge {
   display: inline-block;
   padding: 0.375rem 0.875rem;
-  border-radius: 20px;
+  border-radius: 6px; /* Thay đổi từ 20px thành 6px */
   font-size: 0.8rem;
-  font-weight: 600;
+  font-weight: 500; /* Thay đổi từ 600 thành 500 */
   text-transform: capitalize;
+  white-space: nowrap;
+}
+
+/* Màu sắc cho từng specialty theo Figma */
+.role-badge.radiologist {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.role-badge.pulmonologist {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.role-badge.cardiologist {
+  background: #fce7f3;
+  color: #be185d;
+}
+
+.role-badge.neurologist {
+  background: #fef3c7;
+  color: #d97706;
 }
 
 .role-badge.administrator {
-  background: #fef3c7;
-  color: #92400e;
-}
-
-.role-badge.doctor-staff {
-  background: #dcfce7;
-  color: #166534;
+  background: #f3e8ff;
+  color: #7c3aed;
 }
 
 .role-badge.patient {
-  background: #dbeafe;
-  color: #1e40af;
+  background: #f1f5f9;
+  color: #475569;
 }
 
+.role-badge.doctorstaff {
+  background: #e0f2fe;
+  color: #0277bd;
+}
+
+/* Status Badges - Giống Figma */
 .status-badge {
   display: inline-block;
   padding: 0.375rem 0.875rem;
-  border-radius: 20px;
+  border-radius: 20px; /* Giữ hình oval */
   font-size: 0.8rem;
-  font-weight: 600;
+  font-weight: 500; /* Thay đổi từ 600 thành 500 */
+  text-transform: capitalize;
+  white-space: nowrap;
 }
 
 .status-badge.active {
@@ -361,13 +425,14 @@
 }
 
 .status-badge.suspended {
-  background: #fef2f2;
+  background: #fee2e2;
   color: #dc2626;
 }
 
 .actions {
   display: flex;
   gap: 0.5rem;
+  min-width: 150px; /* Đảm bảo có đủ không gian cho actions */
 }
 
 .action-btn {
@@ -381,6 +446,7 @@
   justify-content: center;
   transition: all 0.2s ease;
   position: relative;
+  flex-shrink: 0;
 }
 
 .action-btn.view {
@@ -410,6 +476,26 @@
 
 .action-btn.toggle:hover {
   background: #fef3c7;
+  transform: translateY(-1px);
+}
+
+.action-btn.suspend {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.action-btn.suspend:hover {
+  background: #fee2e2;
+  transform: translateY(-1px);
+}
+
+.action-btn.activate {
+  background: #f0fdf4;
+  color: #059669;
+}
+
+.action-btn.activate:hover {
+  background: #dcfce7;
   transform: translateY(-1px);
 }
 
@@ -764,7 +850,24 @@
   animation: spin 1s linear infinite;
 }
 
+/* Thanh cuộn cho table wrapper */
+.table-wrapper::-webkit-scrollbar {
+  height: 8px;
+}
 
+.table-wrapper::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
 
 /* Responsive */
 @media (max-width: 768px) {
@@ -796,12 +899,8 @@
     flex-wrap: wrap;
   }
 
-  .users-table {
-    overflow-x: auto;
-  }
-
   .users-table table {
-    min-width: 700px;
+    min-width: 900px; /* Tăng min-width cho mobile để đảm bảo actions hiển thị */
   }
 
   .pagination {
@@ -850,6 +949,7 @@
 
   .user-info {
     gap: 0.5rem;
+    min-width: 180px;
   }
 
   .user-avatar {
@@ -860,6 +960,7 @@
 
   .actions {
     gap: 0.25rem;
+    min-width: 130px;
   }
 
   .action-btn {
@@ -876,7 +977,6 @@
     width: 100%;
   }
 }
-
 
 /* THÊM SCROLL CHO LOGS MANAGEMENT */
 .activity-page {

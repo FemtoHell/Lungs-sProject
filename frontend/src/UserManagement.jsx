@@ -17,7 +17,8 @@ export default function UserManagement() {
     email: '',
     password: '',
     full_name: '',
-    role: 'Patient'
+    role: 'Patient',
+    specialty: '' // Thêm specialty field
   });
 
   useEffect(() => {
@@ -183,6 +184,11 @@ export default function UserManagement() {
       setError('Please enter a valid email address');
       return false;
     }
+    // Validate specialty for doctors
+    if (newUser.role === 'Doctor' && !newUser.specialty) {
+      setError('Please select a specialty for doctor role');
+      return false;
+    }
     return true;
   };
 
@@ -212,7 +218,7 @@ export default function UserManagement() {
 
       if (response.ok) {
         setShowAddModal(false);
-        setNewUser({ email: '', password: '', full_name: '', role: 'Patient' });
+        setNewUser({ email: '', password: '', full_name: '', role: 'Patient', specialty: '' });
         loadUsers();
         setSuccess('User created successfully!');
         setTimeout(() => setSuccess(''), 3000);
@@ -229,22 +235,43 @@ export default function UserManagement() {
 
   const handleModalClose = () => {
     setShowAddModal(false);
-    setNewUser({ email: '', password: '', full_name: '', role: 'Patient' });
+    setNewUser({ email: '', password: '', full_name: '', role: 'Patient', specialty: '' });
     setError('');
     setSuccess('');
   };
 
+  // Cập nhật getUserRole để hiển thị specialty
   const getUserRole = (user) => {
     if (user.is_superuser) return 'Administrator';
-    if (user.is_staff) return 'Doctor/Staff';
+    if (user.is_staff) {
+      // Hiển thị specialty nếu có, hoặc fallback
+      return user.specialty || 'Doctor/Staff';
+    }
     return 'Patient';
   };
 
+  // Cập nhật getUserId để có format YYYY
   const getUserId = (user, index) => {
     const baseIndex = ((currentPage - 1) * 10) + index + 1;
-    if (user.is_superuser) return `ADM-${String(baseIndex).padStart(3, '0')}`;
-    if (user.is_staff) return `DR-${String(baseIndex).padStart(3, '0')}`;
-    return `PAT-${String(baseIndex).padStart(3, '0')}`;
+    const currentYear = new Date().getFullYear();
+    
+    if (user.is_superuser) return `ADM-${currentYear}-${String(baseIndex).padStart(3, '0')}`;
+    if (user.is_staff) return `DR-${currentYear}-${String(baseIndex).padStart(3, '0')}`;
+    return `PAT-${currentYear}-${String(baseIndex).padStart(3, '0')}`;
+  };
+
+  // Thêm function để get avatar src
+  const getAvatarSrc = (user) => {
+    // Kiểm tra nếu user có avatar URL
+    if (user.avatar) return user.avatar;
+    // Trả về null để hiển thị initial letter
+    return null;
+  };
+
+  // Function để get role badge class
+  const getRoleBadgeClass = (role) => {
+    const roleClass = role.toLowerCase().replace(/[^a-z]/g, '');
+    return `role-badge ${roleClass}`;
   };
 
   // Loading state
@@ -277,7 +304,7 @@ export default function UserManagement() {
       <div className="page-header">
         <div className="page-title">
           <h1>User Management</h1>
-          <p>Manage system users and their permissions</p>
+          <p>Manage doctors, staff and their permissions</p>
         </div>
         <button 
           className="add-user-btn"
@@ -302,6 +329,10 @@ export default function UserManagement() {
             >
               <option>All Roles</option>
               <option>Administrator</option>
+              <option>Radiologist</option>
+              <option>Pulmonologist</option>
+              <option>Cardiologist</option>
+              <option>Neurologist</option>
               <option>Doctor</option>
               <option>Patient</option>
             </select>
@@ -346,108 +377,115 @@ export default function UserManagement() {
       </div>
 
       <div className="table-card">
-        <div className="users-table">
-          <table>
-            <thead>
-              <tr>
-                <th>User ID</th>
-                <th>Full Name</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.length > 0 ? (
-                users.map((user, index) => (
-                  <tr key={user._id}>
-                    <td>
-                      <span className="user-id">{getUserId(user, index)}</span>
-                    </td>
-                    <td>
-                      <div className="user-info">
-                        <div className="user-avatar">
-                          {(user.full_name || user.email).charAt(0).toUpperCase()}
+        {/* Thêm wrapper cho horizontal scroll */}
+        <div className="table-wrapper">
+          <div className="users-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Doctor ID</th> {/* Đổi từ "User ID" thành "Doctor ID" */}
+                  <th>Full Name</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {users.length > 0 ? (
+                  users.map((user, index) => (
+                    <tr key={user._id}>
+                      <td>
+                        <span className="user-id">{getUserId(user, index)}</span>
+                      </td>
+                      <td>
+                        <div className="user-info">
+                          <div className="user-avatar">
+                            {getAvatarSrc(user) ? (
+                              <img src={getAvatarSrc(user)} alt={user.full_name} />
+                            ) : (
+                              (user.full_name || user.email).charAt(0).toUpperCase()
+                            )}
+                          </div>
+                          <div className="user-details">
+                            <span className="user-name">
+                              {user.full_name || user.email.split('@')[0]}
+                            </span>
+                            <span className="user-email-small">{user.email}</span>
+                          </div>
                         </div>
-                        <div className="user-details">
-                          <span className="user-name">
-                            {user.full_name || user.email.split('@')[0]}
-                          </span>
-                          <span className="user-email-small">{user.email}</span>
-                        </div>
-                      </div>
-                    </td>
-                    <td>{user.email}</td>
-                    <td>
-                      <span className={`role-badge ${getUserRole(user).toLowerCase().replace('/', '-')}`}>
-                        {getUserRole(user)}
-                      </span>
-                    </td>
-                    <td>
-                      <span className={`status-badge ${user.is_active ? 'active' : 'suspended'}`}>
-                        {user.is_active ? 'Active' : 'Suspended'}
-                      </span>
-                    </td>
-                    <td>
-                      <div className="actions">
-                        <button className="action-btn view" title="View Details">
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
-                          </svg>
-                        </button>
-                        <button className="action-btn edit" title="Edit User">
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
-                          </svg>
-                        </button>
-                        <button 
-                          className={`action-btn toggle ${user.is_active ? 'suspend' : 'activate'}`}
-                          title={user.is_active ? 'Suspend User' : 'Activate User'}
-                          onClick={() => handleStatusChange(user._id, !user.is_active)}
-                        >
-                          {user.is_active ? 
+                      </td>
+                      <td className="user-email">{user.email}</td>
+                      <td>
+                        <span className={getRoleBadgeClass(getUserRole(user))}>
+                          {getUserRole(user)}
+                        </span>
+                      </td>
+                      <td>
+                        <span className={`status-badge ${user.is_active ? 'active' : 'suspended'}`}>
+                          {user.is_active ? 'Active' : 'Suspended'}
+                        </span>
+                      </td>
+                      <td>
+                        <div className="actions">
+                          <button className="action-btn view" title="View Details">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                              <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
-                            </svg>
-                            :
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                              <path d="M8 5v14l11-7z"/>
-                            </svg>
-                          }
-                        </button>
-                        {!user.is_superuser && (
-                          <button 
-                            className="action-btn delete" 
-                            title="Delete User"
-                            onClick={() => handleDeleteUser(user._id)}
-                          >
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                              <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                              <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
                             </svg>
                           </button>
-                        )}
+                          <button className="action-btn edit" title="Edit User">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                              <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                            </svg>
+                          </button>
+                          <button 
+                            className={`action-btn toggle ${user.is_active ? 'suspend' : 'activate'}`}
+                            title={user.is_active ? 'Suspend User' : 'Activate User'}
+                            onClick={() => handleStatusChange(user._id, !user.is_active)}
+                          >
+                            {user.is_active ? 
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM12 20c-4.41 0-8-3.59-8-8 0-1.57.46-3.03 1.24-4.26L16.76 19.24C15.53 19.54 14.07 20 12 20zM19.76 16.26L7.24 3.76C8.47 3.46 9.93 3 12 3c4.41 0 8 3.59 8 8 0 1.57-.46 3.03-1.24 4.26z"/>
+                              </svg>
+                              :
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                              </svg>
+                            }
+                          </button>
+                          {!user.is_superuser && (
+                            <button 
+                              className="action-btn delete" 
+                              title="Delete User"
+                              onClick={() => handleDeleteUser(user._id)}
+                            >
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                              </svg>
+                            </button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="6" className="no-data">
+                      <div className="no-data-content">
+                        <span className="no-data-icon">👥</span>
+                        <p>No users found</p>
+                        <small>
+                          {totalUsers === 0 
+                            ? "The user database is empty. Click 'Add New User' to create the first user." 
+                            : "Try adjusting your filters or add a new user"}
+                        </small>
                       </div>
                     </td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="6" className="no-data">
-                    <div className="no-data-content">
-                      <span className="no-data-icon">👥</span>
-                      <p>No users found</p>
-                      <small>
-                        {totalUsers === 0 
-                          ? "The user database is empty. Click 'Add New User' to create the first user." 
-                          : "Try adjusting your filters or add a new user"}
-                      </small>
-                    </div>
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 
@@ -484,7 +522,7 @@ export default function UserManagement() {
         </div>
       </div>
 
-      {/* Modern Add User Modal */}
+      {/* Modern Add User Modal - Thêm specialty field */}
       {showAddModal && (
         <div className="modal-overlay" onClick={handleModalClose}>
           <div className="modal-container" onClick={(e) => e.stopPropagation()}>
@@ -591,7 +629,7 @@ export default function UserManagement() {
                     <select
                       className="form-select"
                       value={newUser.role}
-                      onChange={(e) => setNewUser({...newUser, role: e.target.value})}
+                      onChange={(e) => setNewUser({...newUser, role: e.target.value, specialty: ''})}
                       disabled={isSubmitting}
                     >
                       <option value="Patient">Patient - Regular user with basic access</option>
@@ -605,6 +643,36 @@ export default function UserManagement() {
                     </div>
                   </div>
                 </div>
+
+                {/* Thêm specialty field khi role là Doctor */}
+                {newUser.role === 'Doctor' && (
+                  <div className="form-group full-width">
+                    <label className="form-label">
+                      <span className="label-text">Specialty</span>
+                      <span className="label-required">*</span>
+                    </label>
+                    <div className="select-wrapper">
+                      <select
+                        className="form-select"
+                        value={newUser.specialty}
+                        onChange={(e) => setNewUser({...newUser, specialty: e.target.value})}
+                        disabled={isSubmitting}
+                        required
+                      >
+                        <option value="">Select Specialty</option>
+                        <option value="Radiologist">Radiologist</option>
+                        <option value="Pulmonologist">Pulmonologist</option>
+                        <option value="Cardiologist">Cardiologist</option>
+                        <option value="Neurologist">Neurologist</option>
+                      </select>
+                      <div className="select-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M7 10l5 5 5-5z"/>
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="modal-footer">
