@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './DoctorDashboard.css';
 import AIDiagnosis from './AIDiagnosis';
+import PatientRecords from './PatientRecords';
 
 export default function DoctorDashboard({ user, onLogout }) {
   const [currentPage, setCurrentPage] = useState('dashboard');
@@ -97,49 +98,36 @@ export default function DoctorDashboard({ user, onLogout }) {
 
   const getPatientAvatar = (name) => {
     if (!name) return '?';
-    const words = name.split(' ');
-    if (words.length >= 2) {
-      return (words[0][0] + words[1][0]).toUpperCase();
-    }
-    return name.substring(0, 2).toUpperCase();
+    return name.charAt(0).toUpperCase();
   };
 
-  // Handle navigation between pages
-  const handleNavigation = (page) => {
-    setCurrentPage(page);
-  };
-
-  // Handle clicks from quick actions
   const handleQuickActionClick = (action) => {
-    switch (action) {
-      case 'upload':
-        setCurrentPage('upload');
-        break;
-      case 'diagnosis':
-        setCurrentPage('diagnosis');
-        break;
-      case 'reports':
-        setCurrentPage('reports');
-        break;
-      default:
-        break;
-    }
+    setCurrentPage(action);
   };
 
+  // Show loading spinner
   if (loading) {
-    return <div className="doctor-loading">Loading...</div>;
+    return (
+      <div className="doctor-loading">
+        <div className="loading-spinner">Loading...</div>
+      </div>
+    );
+  }
+
+  // Render Patient Records page
+  if (currentPage === 'patients') {
+    return <PatientRecords user={user} onLogout={onLogout} onNavigate={setCurrentPage} />;
   }
 
   // Render AI Diagnosis page
   if (currentPage === 'diagnosis') {
-    return <AIDiagnosis user={user} onLogout={onLogout} onNavigate={handleNavigation} />;
+    return <AIDiagnosis user={user} onLogout={onLogout} onNavigate={setCurrentPage} />;
   }
 
-  // Render other pages (placeholder for now)
-  if (currentPage !== 'dashboard') {
+  // Render other pages (upload, reports, settings)
+  if (currentPage === 'upload' || currentPage === 'reports' || currentPage === 'settings') {
     return (
       <div className="doctor-dashboard">
-        {/* Header Bar */}
         <div className="doctor-top-header">
           <div className="doctor-top-left">
             <div className="doctor-logo-small">
@@ -168,7 +156,6 @@ export default function DoctorDashboard({ user, onLogout }) {
         </div>
 
         <div className="doctor-main-layout">
-          {/* Sidebar */}
           <div className="doctor-sidebar">
             <nav className="sidebar-nav">
               <a href="#" className={`nav-item ${currentPage === 'dashboard' ? 'active' : ''}`} onClick={() => setCurrentPage('dashboard')}>
@@ -198,18 +185,15 @@ export default function DoctorDashboard({ user, onLogout }) {
             </nav>
           </div>
 
-          {/* Page Content */}
           <div className="doctor-content-area">
             <div className="page-content">
               <h1 className="page-title">
                 {currentPage === 'upload' && 'Upload Scan'}
-                {currentPage === 'patients' && 'Patient Records'}
                 {currentPage === 'reports' && 'Reports'}
                 {currentPage === 'settings' && 'Settings'}
               </h1>
               <p className="page-description">
                 {currentPage === 'upload' && 'Upload medical scans and images for analysis.'}
-                {currentPage === 'patients' && 'Manage patient records and medical history.'}
                 {currentPage === 'reports' && 'View and generate medical reports.'}
                 {currentPage === 'settings' && 'Configure system and user preferences.'}
               </p>
@@ -293,7 +277,7 @@ export default function DoctorDashboard({ user, onLogout }) {
         <div className="doctor-content-area">
           {/* Welcome Section */}
           <div className="welcome-section">
-            <h1 className="welcome-title">Welcome back, Dr. {user?.full_name || user?.email?.split('@')[0] || 'John'}!</h1>
+            <h1 className="welcome-title">Welcome back, Dr. {user?.full_name || user?.email?.split('@')[0] || 'Johnson'}!</h1>
             <p className="welcome-subtitle">Here's what's happening with your patients today.</p>
           </div>
 
@@ -329,7 +313,7 @@ export default function DoctorDashboard({ user, onLogout }) {
             <div className="alert-banner">
               <span className="alert-icon">⚠️</span>
               <span className="alert-text">{stats.pendingReviews} abnormal scans pending review</span>
-              <span className="alert-arrow">→</span>
+              <span className="alert-arrow" onClick={() => setCurrentPage('patients')}>→</span>
             </div>
           )}
 
@@ -339,32 +323,36 @@ export default function DoctorDashboard({ user, onLogout }) {
             <div className="content-card">
               <div className="card-header">
                 <h3 className="card-title">Latest Scans</h3>
-                <button className="view-all-btn">View All</button>
+                <button className="view-all-btn" onClick={() => setCurrentPage('patients')}>View All</button>
               </div>
               <div className="scans-list">
-                {latestScans.length > 0 ? latestScans.map((scan, index) => (
-                  <div key={scan.id || index} className="scan-item">
-                    <div className="scan-avatar">
-                      <div className="scan-image">🫁</div>
+                {latestScans.length > 0 ? (
+                  latestScans.map((scan, index) => (
+                    <div key={scan.id || index} className="scan-item">
+                      <div className="scan-avatar">
+                        <div className="scan-image">📷</div>
+                      </div>
+                      <div className="scan-details">
+                        <div className="scan-patient">{scan.patientName}</div>
+                        <div className="scan-time">{formatScanTime(scan.timestamp)}</div>
+                      </div>
+                      <div className="scan-status">
+                        <span className={`status-badge status-${scan.status?.toLowerCase() || 'processing'}`}>
+                          {scan.status || 'Processing'}
+                        </span>
+                      </div>
                     </div>
-                    <div className="scan-details">
-                      <div className="scan-patient">{scan.patientName}</div>
-                      <div className="scan-time">{formatScanTime(scan.timestamp)}</div>
-                    </div>
-                    <div className={`scan-status status-${(scan.status || 'processing').toLowerCase()}`}>
-                      {scan.status || 'Processing'}
-                    </div>
-                  </div>
-                )) : (
+                  ))
+                ) : (
                   <div className="no-data">
                     <div className="no-data-icon">📊</div>
-                    <p className="no-data-text">No recent scans found</p>
+                    <p className="no-data-text">No recent scans</p>
                   </div>
                 )}
               </div>
             </div>
 
-            {/* Quick Actions Card */}
+            {/* Quick Actions */}
             <div className="content-card">
               <div className="card-header">
                 <h3 className="card-title">Quick Actions</h3>
@@ -373,16 +361,16 @@ export default function DoctorDashboard({ user, onLogout }) {
                 <button className="action-item action-upload" onClick={() => handleQuickActionClick('upload')}>
                   <div className="action-icon action-icon-blue">⬆️</div>
                   <div className="action-content">
-                    <div className="action-title">Upload New Scan</div>
-                    <div className="action-subtitle">Add patient imaging data</div>
+                    <div className="action-title">Upload Scan</div>
+                    <div className="action-subtitle">Add new medical images</div>
                   </div>
                   <div className="action-arrow">→</div>
                 </button>
                 
                 <button className="action-item action-diagnosis" onClick={() => handleQuickActionClick('diagnosis')}>
-                  <div className="action-icon action-icon-green">🔍</div>
+                  <div className="action-icon action-icon-green">🧠</div>
                   <div className="action-content">
-                    <div className="action-title">Start Diagnosis</div>
+                    <div className="action-title">AI Diagnosis</div>
                     <div className="action-subtitle">Run AI analysis</div>
                   </div>
                   <div className="action-arrow">→</div>
