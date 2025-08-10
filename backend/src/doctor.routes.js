@@ -667,4 +667,121 @@ router.get('/scan-types', requireDoctor, async (req, res) => {
   }
 });
 
+// API tạo patient mới - THÊM API MỚI
+router.post('/create-patient', requireDoctor, async (req, res) => {
+  try {
+    console.log('👤 Creating new patient by doctor:', req.user?.email);
+    
+    const { 
+      full_name, 
+      email, 
+      phone, 
+      date_of_birth, 
+      gender, 
+      address, 
+      emergency_contact, 
+      medical_history 
+    } = req.body;
+    
+    // Basic validation
+    if (!full_name || !email) {
+      return res.status(400).json({ 
+        message: 'Full name and email are required' 
+      });
+    }
+    
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ 
+        message: 'Invalid email format' 
+      });
+    }
+    
+    const dbWrite = await getDbWrite();
+    const dbRead = await getDbRead();
+    
+    // Check if email already exists
+    let existing = null;
+    try {
+      const collections = await dbRead.listCollections({ name: 'users' }).toArray();
+      if (collections.length > 0) {
+        existing = await dbRead.collection('users').findOne({ email });
+      }
+    } catch (err) {
+      console.log('Users collection does not exist yet, proceeding to create patient');
+    }
+    
+    if (existing) {
+      return res.status(409).json({ 
+        message: 'A patient with this email already exists' 
+      });
+    }
+    
+    // Generate a temporary password for the patient
+    const tempPassword = Math.random().toString(36).slice(-8);
+    const bcrypt = require('bcryptjs');
+    const hashedPassword = await bcrypt.hash(tempPassword, 12);
+    
+    // Create patient object
+    const newPatient = {
+      email,
+      password: hashedPassword,
+      full_name: full_name.trim(),
+      phone: phone || '',
+      date_of_birth: date_of_birth ? new Date(date_of_birth) : null,
+      gender: gender || 'Female',
+      address: address || '',
+      emergency_contact: emergency_contact || '',
+      medical_history: medical_history || '',
+      created_at: new Date(),
+      updated_at: new Date(),
+      is_active: true,
+      is_superuser: false,
+      is_staff: false,
+      roles: [],
+      extra_permissions: [],
+      created_by: req.user.user_id,
+      provider: 'doctor_created',
+      temp_password: tempPassword // Store temp password for now (in real app, send via email)
+    };
+    
+    // Insert patient into database
+    const usersCollection = dbWrite.collection('users');
+    const result = await usersCollection.insertOne(newPatient);
+    
+    console.log('✅ Patient created successfully with ID:', result.insertedId);
+    
+    // Clear cache if exists
+    try {
+      const redis = req.app.get('redis');
+      if (redis) {
+        await redis.del(`user:${email}`);
+      }
+    } catch (cacheErr) {
+      console.warn('Cache clear error:', cacheErr.message);
+    }
+    
+    // Return patient info (without password)
+    const patientResponse = { 
+      ...newPatient, 
+      _id: result.insertedId,
+    };
+    delete patientResponse.password;
+    
+    res.status(201).json({ 
+      message: 'Patient created successfully', 
+      patient: patientResponse,
+      tempPassword // In real app, this should be sent via email instead
+    });
+    
+  } catch (error) {
+    console.error('❌ Error creating patient:', error);
+    res.status(500).json({ 
+      message: 'Error creating patient', 
+      error: error.message 
+    });
+  }
+});
+
 module.exports = router;

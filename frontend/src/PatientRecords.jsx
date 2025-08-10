@@ -22,6 +22,20 @@ export default function PatientRecords({ user, onLogout, onNavigate }) {
   const [diagnosesList, setDiagnosesList] = useState([]);
   const [scanTypesList, setScanTypesList] = useState([]);
 
+  // New Patient Modal State
+  const [showNewPatientModal, setShowNewPatientModal] = useState(false);
+  const [newPatientForm, setNewPatientForm] = useState({
+    full_name: '',
+    email: '',
+    phone: '',
+    date_of_birth: '',
+    gender: 'Female',
+    address: '',
+    emergency_contact: '',
+    medical_history: ''
+  });
+  const [createLoading, setCreateLoading] = useState(false);
+
   useEffect(() => {
     loadPatients();
     loadFilterOptions();
@@ -121,6 +135,77 @@ export default function PatientRecords({ user, onLogout, onNavigate }) {
       ...prev,
       currentPage: 1
     }));
+  };
+
+  // New Patient Functions
+  const handleNewPatientClick = () => {
+    setShowNewPatientModal(true);
+  };
+
+  const handleNewPatientFormChange = (field, value) => {
+    setNewPatientForm(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const resetNewPatientForm = () => {
+    setNewPatientForm({
+      full_name: '',
+      email: '',
+      phone: '',
+      date_of_birth: '',
+      gender: 'Female',
+      address: '',
+      emergency_contact: '',
+      medical_history: ''
+    });
+  };
+
+  const handleCloseNewPatientModal = () => {
+    setShowNewPatientModal(false);
+    resetNewPatientForm();
+  };
+
+  const handleCreatePatient = async () => {
+    try {
+      setCreateLoading(true);
+      const token = localStorage.getItem('token');
+
+      // Basic validation
+      if (!newPatientForm.full_name.trim()) {
+        alert('Please enter patient name');
+        return;
+      }
+      if (!newPatientForm.email.trim()) {
+        alert('Please enter patient email');
+        return;
+      }
+
+      const response = await fetch('/doctor/create-patient', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newPatientForm)
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        alert('Patient created successfully!');
+        handleCloseNewPatientModal();
+        loadPatients(); // Reload the patients list
+      } else {
+        const errorData = await response.json();
+        alert(errorData.message || 'Error creating patient');
+      }
+    } catch (error) {
+      console.error('Error creating patient:', error);
+      alert('Error creating patient. Please try again.');
+    } finally {
+      setCreateLoading(false);
+    }
   };
 
   const formatScanTime = (timestamp) => {
@@ -238,7 +323,7 @@ export default function PatientRecords({ user, onLogout, onNavigate }) {
                 <h1 className="page-title">Patient Records</h1>
                 <p className="page-description">Manage and view patient medical records</p>
               </div>
-              <button className="new-patient-btn">
+              <button className="new-patient-btn" onClick={handleNewPatientClick}>
                 <span className="btn-icon">+</span>
                 New Patient Record
               </button>
@@ -459,6 +544,128 @@ export default function PatientRecords({ user, onLogout, onNavigate }) {
           </div>
         </div>
       </div>
+
+      {/* New Patient Modal */}
+      {showNewPatientModal && (
+        <div className="modal-overlay" onClick={handleCloseNewPatientModal}>
+          <div className="modal-container" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2 className="modal-title">Add New Patient</h2>
+              <button className="modal-close-btn" onClick={handleCloseNewPatientModal}>
+                ✕
+              </button>
+            </div>
+            <div className="modal-content">
+              <div className="form-grid">
+                <div className="form-group">
+                  <label className="form-label">Full Name *</label>
+                  <input
+                    type="text"
+                    className="form-input"
+                    placeholder="Enter patient's full name"
+                    value={newPatientForm.full_name}
+                    onChange={(e) => handleNewPatientFormChange('full_name', e.target.value)}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Email *</label>
+                  <input
+                    type="email"
+                    className="form-input"
+                    placeholder="Enter patient's email"
+                    value={newPatientForm.email}
+                    onChange={(e) => handleNewPatientFormChange('email', e.target.value)}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Phone Number</label>
+                  <input
+                    type="tel"
+                    className="form-input"
+                    placeholder="Enter phone number"
+                    value={newPatientForm.phone}
+                    onChange={(e) => handleNewPatientFormChange('phone', e.target.value)}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Date of Birth</label>
+                  <input
+                    type="date"
+                    className="form-input"
+                    value={newPatientForm.date_of_birth}
+                    onChange={(e) => handleNewPatientFormChange('date_of_birth', e.target.value)}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Gender</label>
+                  <select
+                    className="form-select"
+                    value={newPatientForm.gender}
+                    onChange={(e) => handleNewPatientFormChange('gender', e.target.value)}
+                  >
+                    <option value="Female">Female</option>
+                    <option value="Male">Male</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Emergency Contact</label>
+                  <input
+                    type="text"
+                    className="form-input"
+                    placeholder="Emergency contact number"
+                    value={newPatientForm.emergency_contact}
+                    onChange={(e) => handleNewPatientFormChange('emergency_contact', e.target.value)}
+                  />
+                </div>
+
+                <div className="form-group form-group-full">
+                  <label className="form-label">Address</label>
+                  <input
+                    type="text"
+                    className="form-input"
+                    placeholder="Enter patient's address"
+                    value={newPatientForm.address}
+                    onChange={(e) => handleNewPatientFormChange('address', e.target.value)}
+                  />
+                </div>
+
+                <div className="form-group form-group-full">
+                  <label className="form-label">Medical History</label>
+                  <textarea
+                    className="form-textarea"
+                    placeholder="Enter relevant medical history"
+                    rows="3"
+                    value={newPatientForm.medical_history}
+                    onChange={(e) => handleNewPatientFormChange('medical_history', e.target.value)}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button 
+                className="modal-btn modal-btn-cancel" 
+                onClick={handleCloseNewPatientModal}
+                disabled={createLoading}
+              >
+                Cancel
+              </button>
+              <button 
+                className="modal-btn modal-btn-primary" 
+                onClick={handleCreatePatient}
+                disabled={createLoading}
+              >
+                {createLoading ? 'Creating...' : 'Create Patient'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

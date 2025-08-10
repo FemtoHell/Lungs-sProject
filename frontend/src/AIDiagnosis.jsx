@@ -240,6 +240,42 @@ export default function AIDiagnosis({ user, onLogout, onNavigate }) {
                   </div>
                 </div>
               )}
+
+              {/* Action Buttons */}
+              <div className="ai-actions">
+                <button 
+                  className={`action-btn btn-primary ${isAnalyzing ? 'analyzing' : ''}`}
+                  onClick={handleRunDiagnosis}
+                >
+                  {isAnalyzing ? (
+                    <>
+                      <span className="loading-spinner">⏳</span>
+                      Analyzing...
+                    </>
+                  ) : (
+                    <>
+                      <span className="btn-icon">▶️</span>
+                      Run Diagnosis
+                    </>
+                  )}
+                </button>
+                
+                <button 
+                  className="action-btn btn-success"
+                  onClick={handleSaveToRecord}
+                >
+                  <span className="btn-icon">💾</span>
+                  Save to Patient Record
+                </button>
+                
+                <button 
+                  className="action-btn btn-danger"
+                  onClick={handleExportPDF}
+                >
+                  <span className="btn-icon">📄</span>
+                  Export PDF
+                </button>
+              </div>
             </div>
 
             {/* Right Column - Results */}
@@ -361,68 +397,6 @@ export default function AIDiagnosis({ user, onLogout, onNavigate }) {
                 )}
               </div>
             </div>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="ai-actions">
-            <button 
-              className="action-btn btn-primary"
-              onClick={handleRunDiagnosis}
-              disabled={!uploadedImage || isAnalyzing}
-            >
-              {isAnalyzing ? (
-                <>
-                  <span className="loading-spinner">⏳</span>
-                  Analyzing...
-                </>
-              ) : (
-                <>
-                  <span className="btn-icon">▶️</span>
-                  Run Diagnosis
-                </>
-              )}
-            </button>
-            
-            <button 
-              className="action-btn btn-success"
-              onClick={handleSaveToRecord}
-              disabled={!analysisResults}
-            >
-              <span className="btn-icon">💾</span>
-              Save to Patient Record
-            </button>
-            
-            <button 
-              className="action-btn btn-danger"
-              onClick={handleExportPDF}
-              disabled={!analysisResults}
-            >
-              <span className="btn-icon">📄</span>
-              Export PDF
-            </button>
-          </div>
-
-          {/* Bottom Toolbar */}
-          <div className="ai-toolbar">
-            <button className="tool-button tool-active">
-              <span className="tool-icon">✈️</span>
-            </button>
-            <button className="tool-button">
-              <span className="tool-icon">👆</span>
-            </button>
-            <button className="tool-button">
-              <span className="tool-icon">💬</span>
-            </button>
-            <button className="tool-view-only">View only</button>
-            <button className="tool-button">
-              <span className="tool-icon">📏</span>
-            </button>
-            <button className="tool-button">
-              <span className="tool-icon">📋</span>
-            </button>
-            <button className="tool-button">
-              <span className="tool-icon">💻</span>
-            </button>
           </div>
         </div>
       </div>

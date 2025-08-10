@@ -1,17 +1,15 @@
-/* AI Diagnosis Styles */
 .ai-diagnosis {
-  height: 100vh;
-  width: 100vw;
+  min-height: 100vh;
   background: #f8fafc;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-size: 14px;
-  line-height: 1.5;
-  color: #1e293b;
-  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-/* ===== TOP HEADER BAR ===== */
+/* ===== TOP HEADER ===== */
 .ai-top-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   height: 64px;
   background: white;
   border-bottom: 1px solid #e2e8f0;
@@ -19,12 +17,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 24px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
+  z-index: 100;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .ai-top-left {
@@ -38,16 +32,97 @@
   gap: 8px;
 }
 
+.logo-icon {
+  font-size: 24px;
+}
+
+.logo-text {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
 .ai-top-right {
   display: flex;
   align-items: center;
   gap: 16px;
 }
 
+.notification-icon {
+  position: relative;
+  cursor: pointer;
+}
+
+.notification-bell {
+  font-size: 20px;
+  color: #64748b;
+}
+
+.notification-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #ef4444;
+  color: white;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
 .ai-profile {
   display: flex;
   align-items: center;
   gap: 12px;
+}
+
+.profile-avatar {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.profile-role {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.logout-button {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.logout-button:hover {
+  background: #dc2626;
 }
 
 /* ===== MAIN LAYOUT ===== */
@@ -66,12 +141,53 @@
   overflow-y: auto;
 }
 
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 16px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.nav-item:hover {
+  background: #f1f5f9;
+  color: #1e293b;
+}
+
+.nav-item.active {
+  background: #dbeafe;
+  color: #1d4ed8;
+  font-weight: 600;
+}
+
+.nav-icon {
+  font-size: 18px;
+  width: 20px;
+  text-align: center;
+}
+
+.nav-text {
+  flex: 1;
+}
+
 /* ===== CONTENT AREA ===== */
 .ai-content-area {
   flex: 1;
   padding: 32px;
   overflow-y: auto;
-  background: #f8fafc;
 }
 
 /* ===== HEADER SECTION ===== */
@@ -83,14 +199,8 @@
 }
 
 .ai-header-icon {
-  width: 48px;
-  height: 48px;
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
+  font-size: 32px;
+  color: #3b82f6;
 }
 
 .ai-header-content {
@@ -99,10 +209,9 @@
 
 .ai-title {
   font-size: 28px;
-  font-weight: 600;
+  font-weight: 700;
   color: #1e293b;
   margin: 0 0 8px 0;
-  line-height: 1.3;
 }
 
 .ai-subtitle {
@@ -116,7 +225,6 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 32px;
-  margin-bottom: 32px;
 }
 
 /* ===== UPLOAD SECTION ===== */
@@ -126,65 +234,83 @@
   gap: 24px;
 }
 
-.upload-card {
+.upload-card,
+.preview-card,
+.confidence-card,
+.abnormalities-card,
+.analysis-card,
+.patient-info-card {
   background: white;
-  border: 1px solid #e2e8f0;
   border-radius: 12px;
-  overflow: hidden;
+  border: 1px solid #e2e8f0;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
 }
 
-.upload-header {
-  padding: 20px 24px 16px 24px;
-  border-bottom: 1px solid #f1f5f9;
+.upload-header,
+.preview-header,
+.confidence-header,
+.abnormalities-header,
+.patient-info-header {
   display: flex;
   align-items: center;
   gap: 12px;
+  padding: 20px 24px;
+  border-bottom: 1px solid #f1f5f9;
+  background: #f8fafc;
 }
 
-.upload-icon {
+.upload-icon,
+.preview-icon,
+.confidence-icon,
+.abnormalities-icon,
+.patient-info-icon {
   font-size: 18px;
   color: #3b82f6;
 }
 
-.upload-title {
+.upload-title,
+.preview-title,
+.confidence-title,
+.abnormalities-title,
+.patient-info-title {
   font-size: 16px;
   font-weight: 600;
   color: #1e293b;
 }
 
 .upload-area {
-  padding: 40px 24px;
-  border: 2px dashed #cbd5e1;
   margin: 24px;
-  border-radius: 8px;
+  padding: 48px 24px;
+  border: 2px dashed #cbd5e1;
+  border-radius: 12px;
+  text-align: center;
   cursor: pointer;
   transition: all 0.2s;
-  text-align: center;
+  background: #f8fafc;
 }
 
 .upload-area:hover,
 .upload-area.drag-over {
   border-color: #3b82f6;
-  background: #f8fafc;
+  background: #f0f9ff;
 }
 
 .upload-content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
 }
 
 .upload-cloud-icon {
   font-size: 48px;
-  color: #3b82f6;
-  margin-bottom: 8px;
+  color: #94a3b8;
 }
 
 .upload-text {
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 18px;
+  font-weight: 600;
   color: #1e293b;
 }
 
@@ -197,10 +323,10 @@
   background: #3b82f6;
   color: white;
   border: none;
-  padding: 10px 20px;
-  border-radius: 6px;
+  padding: 12px 24px;
+  border-radius: 8px;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   transition: background 0.2s;
 }
@@ -211,84 +337,212 @@
 
 .upload-formats {
   font-size: 12px;
-  color: #9ca3af;
+  color: #94a3b8;
 }
 
 /* ===== IMAGE PREVIEW ===== */
-.preview-card {
-  background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-.preview-header {
-  padding: 20px 24px 16px 24px;
-  border-bottom: 1px solid #f1f5f9;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.preview-icon {
-  font-size: 18px;
-  color: #3b82f6;
-}
-
-.preview-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: #1e293b;
-}
-
 .image-container {
   padding: 24px;
 }
 
 .image-filename {
-  background: #f1f5f9;
-  color: #64748b;
-  font-size: 12px;
-  padding: 8px 12px;
-  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
   margin-bottom: 16px;
-  font-family: monospace;
 }
 
 .image-preview {
   position: relative;
   border-radius: 8px;
   overflow: hidden;
-  background: #000;
+  background: #1e293b;
 }
 
 .image-preview img {
   width: 100%;
-  height: 300px;
-  object-fit: contain;
+  height: auto;
   display: block;
 }
 
 .image-tools {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 12px;
+  right: 12px;
   display: flex;
   gap: 8px;
 }
 
 .tool-btn {
-  width: 32px;
-  height: 32px;
-  background: rgba(0, 0, 0, 0.7);
-  color: white;
+  width: 36px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.9);
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 16px;
+  transition: all 0.2s;
+}
+
+.tool-btn:hover {
+  background: white;
+  transform: scale(1.05);
+}
+
+/* ===== AI ACTIONS BUTTONS - SỬA LAYOUT CHIỀU NGANG ===== */
+.ai-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 24px; /* Giảm padding để phù hợp với text ngang */
+  border: 2px solid transparent;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 180px; /* Tăng width để chứa text ngang */
+  max-width: 220px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: white;
+  color: #374151;
+  white-space: nowrap; /* Ngăn text xuống dòng */
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.action-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Primary Button - Run Diagnosis (Xanh dương) */
+.btn-primary {
+  border-color: #4f46e5;
+  color: #4f46e5;
+}
+
+.btn-primary:hover {
+  background: #4f46e5 !important;
+  color: white !important;
+  border-color: #4f46e5;
+}
+
+/* Success Button - Save to Patient Record (Xanh lá) */
+.btn-success {
+  border-color: #059669;
+  color: #059669;
+}
+
+.btn-success:hover {
+  background: #059669 !important;
+  color: white !important;
+  border-color: #059669;
+}
+
+/* Danger Button - Export PDF (Đỏ) */
+.btn-danger {
+  border-color: #dc2626;
+  color: #dc2626;
+}
+
+.btn-danger:hover {
+  background: #dc2626 !important;
+  color: white !important;
+  border-color: #dc2626;
+}
+
+.btn-icon {
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0; /* Ngăn icon bị co lại */
+}
+
+/* Loading state khi analyzing */
+.action-btn.analyzing {
+  pointer-events: none;
+  opacity: 0.8;
+  background: #4f46e5 !important;
+  color: white !important;
+  border-color: #4f46e5;
+}
+
+.loading-spinner {
+  animation: spin 1s linear infinite;
+  font-size: 18px;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive cho mobile */
+@media (max-width: 768px) {
+  .ai-actions {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .action-btn {
+    width: 100%;
+    min-width: unset;
+    max-width: unset;
+  }
+}
+
+/* Responsive cho tablet */
+@media (max-width: 1024px) {
+  .ai-actions {
+    gap: 10px;
+  }
+  
+  .action-btn {
+    min-width: 160px;
+    max-width: 200px;
+    font-size: 14px;
+    padding: 14px 20px;
+  }
+  
+  .btn-icon {
+    font-size: 16px;
+  }
+}
+
+/* Loading state khi analyzing */
+.action-btn.analyzing {
+  pointer-events: none;
+  opacity: 0.8;
+  background: #4f46e5;
+  color: white;
+  border-color: #4f46e5;
+}
+
+.loading-spinner {
+  animation: spin 1s linear infinite;
+  font-size: 18px;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 /* ===== RESULTS SECTION ===== */
@@ -299,42 +553,15 @@
 }
 
 /* ===== CONFIDENCE CARD ===== */
-.confidence-card {
-  background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-.confidence-header {
-  padding: 20px 24px 16px 24px;
-  border-bottom: 1px solid #f1f5f9;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.confidence-icon {
-  font-size: 18px;
-  color: #10b981;
-}
-
-.confidence-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: #1e293b;
-}
-
 .confidence-content {
   padding: 24px;
   text-align: center;
 }
 
 .confidence-percentage {
-  font-size: 36px;
+  font-size: 48px;
   font-weight: 700;
-  color: #10b981;
+  color: #059669;
   margin-bottom: 16px;
 }
 
@@ -349,7 +576,7 @@
 
 .confidence-fill {
   height: 100%;
-  background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+  background: #059669;
   transition: width 0.5s ease;
 }
 
@@ -360,33 +587,6 @@
 }
 
 /* ===== ABNORMALITIES CARD ===== */
-.abnormalities-card {
-  background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-.abnormalities-header {
-  padding: 20px 24px 16px 24px;
-  border-bottom: 1px solid #f1f5f9;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.abnormalities-icon {
-  font-size: 18px;
-  color: #f59e0b;
-}
-
-.abnormalities-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: #1e293b;
-}
-
 .abnormalities-content {
   padding: 24px;
 }
@@ -404,8 +604,8 @@
 }
 
 .abnormality-indicator {
-  width: 8px;
-  height: 8px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
 }
 
@@ -436,51 +636,28 @@
 
 /* ===== ANALYSIS CARD ===== */
 .analysis-card {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 20px;
+  margin-top: 24px;
+}
+
+.analysis-content {
+  padding: 24px;
 }
 
 .analysis-content p {
   font-size: 14px;
   line-height: 1.6;
-  color: #475569;
+  color: #374151;
   margin: 0;
 }
 
 /* ===== PATIENT INFO CARD ===== */
-.patient-info-card {
-  background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
 .patient-info-header {
-  padding: 20px 24px;
-  border-bottom: 1px solid #f1f5f9;
-  display: flex;
-  align-items: center;
-  gap: 12px;
   cursor: pointer;
-}
-
-.patient-info-icon {
-  font-size: 18px;
-  color: #3b82f6;
-}
-
-.patient-info-title {
-  flex: 1;
-  font-size: 16px;
-  font-weight: 600;
-  color: #1e293b;
+  justify-content: space-between;
 }
 
 .expand-icon {
-  font-size: 12px;
+  font-size: 16px;
   color: #64748b;
   transition: transform 0.2s;
 }
@@ -491,10 +668,11 @@
 
 .patient-info-content {
   padding: 24px;
+  border-top: 1px solid #f1f5f9;
 }
 
 .form-group {
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 .form-row {
@@ -505,11 +683,9 @@
 
 .form-group label {
   display: block;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   color: #374151;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
   margin-bottom: 8px;
 }
 
@@ -521,7 +697,10 @@
   border: 1px solid #d1d5db;
   border-radius: 6px;
   font-size: 14px;
+  color: #374151;
+  background: white;
   transition: border-color 0.2s;
+  box-sizing: border-box;
 }
 
 .form-group input:focus,
@@ -532,149 +711,49 @@
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
+.form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+  font-family: inherit;
+}
+
 /* ===== NO ANALYSIS STATE ===== */
 .no-analysis {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 40px 20px;
-  color: #64748b;
+  padding: 32px;
   text-align: center;
 }
 
 .no-analysis-icon {
-  font-size: 32px;
+  font-size: 48px;
   opacity: 0.5;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 
 .no-analysis-text {
   font-size: 14px;
-  font-weight: 500;
-  margin: 0;
-}
-
-/* ===== ACTION BUTTONS ===== */
-.ai-actions {
-  display: flex;
-  gap: 16px;
-  margin-bottom: 32px;
-}
-
-.action-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 24px;
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.action-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.btn-primary {
-  background: #3b82f6;
-  color: white;
-}
-
-.btn-primary:hover:not(:disabled) {
-  background: #2563eb;
-}
-
-.btn-success {
-  background: #10b981;
-  color: white;
-}
-
-.btn-success:hover:not(:disabled) {
-  background: #059669;
-}
-
-.btn-danger {
-  background: #ef4444;
-  color: white;
-}
-
-.btn-danger:hover:not(:disabled) {
-  background: #dc2626;
-}
-
-.btn-icon {
-  font-size: 16px;
-}
-
-.loading-spinner {
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-/* ===== TOOLBAR ===== */
-.ai-toolbar {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 16px 0;
-  border-top: 1px solid #e2e8f0;
-}
-
-.tool-button {
-  width: 40px;
-  height: 40px;
-  background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.tool-button:hover {
-  background: #f1f5f9;
-  border-color: #cbd5e1;
-}
-
-.tool-button.tool-active {
-  background: #3b82f6;
-  border-color: #3b82f6;
-  color: white;
-}
-
-.tool-view-only {
-  background: #9ca3af;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-size: 12px;
+  color: #64748b;
   font-weight: 500;
 }
 
-.tool-icon {
-  font-size: 16px;
-}
-
-/* ===== RESPONSIVE ===== */
-@media (max-width: 1024px) {
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 1200px) {
   .ai-main-grid {
     grid-template-columns: 1fr;
+    gap: 24px;
   }
   
   .ai-actions {
     flex-direction: column;
+    gap: 12px;
+  }
+  
+  .action-btn {
+    width: 100%;
+    min-width: unset;
   }
 }
 
@@ -687,7 +766,86 @@
     padding: 16px;
   }
   
+  .ai-header-section {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
   .ai-title {
     font-size: 24px;
+  }
+  
+  .ai-subtitle {
+    font-size: 14px;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .ai-actions {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .action-btn {
+    width: 100%;
+    min-width: unset;
+    max-width: unset;
+  }
+}
+
+@media (max-width: 1024px) {
+  .ai-actions {
+    gap: 10px;
+  }
+  
+  .action-btn {
+    min-width: 120px;
+    max-width: 150px;
+    font-size: 14px;
+    padding: 14px 20px;
+  }
+  
+  .btn-icon {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ai-top-header {
+    padding: 0 16px;
+  }
+  
+  .ai-top-right {
+    gap: 12px;
+  }
+  
+  .profile-info {
+    display: none;
+  }
+  
+  .upload-area {
+    margin: 16px;
+    padding: 32px 16px;
+  }
+  
+  .upload-cloud-icon {
+    font-size: 36px;
+  }
+  
+  .upload-text {
+    font-size: 16px;
+  }
+  
+  .ai-actions {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .action-btn {
+    width: 100%;
   }
 }
