@@ -248,7 +248,7 @@ export default function AdminDashboard() {
       {/* Sidebar */}
       <div className="sidebar">
         <div className="logo">
-          <div className="logo-icon">🩺</div>
+          <div className="logo-icon">🫁</div>
           <h2>MediDiagnose AI</h2>
         </div>
         

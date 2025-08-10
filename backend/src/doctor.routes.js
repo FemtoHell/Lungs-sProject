@@ -282,46 +282,53 @@ router.get('/recent-patients', requireDoctor, async (req, res) => {
         
         // Lấy thông tin scan gần nhất cho mỗi patient
         for (let patient of patients) {
-          let lastScan = 'Never';
-          let status = 'Normal';
-          
           try {
             // Tìm medical record gần nhất của patient này
-            const lastRecord = await medicalRecordsCollection
-              .findOne(
-                { 
-                  $or: [
-                    { patient_id: patient._id },
-                    { user_id: patient._id }
-                  ]
-                },
-                { sort: { created_at: -1 } }
-              );
+            const latestRecord = await medicalRecordsCollection.findOne({
+              $or: [
+                { patient_id: patient._id.toString() },
+                { user_id: patient._id.toString() }
+              ]
+            }, { sort: { created_at: -1 } });
             
-            if (lastRecord) {
-              lastScan = lastRecord.created_at.toISOString().split('T')[0]; // Format: YYYY-MM-DD
-              
-              // Xác định status dựa trên kết quả
-              if (lastRecord.diagnosis || lastRecord.analysis_result) {
-                const result = (lastRecord.diagnosis || lastRecord.analysis_result).toLowerCase();
-                if (result.includes('abnormal') || result.includes('suspicious') || result.includes('concerning')) {
-                  status = 'Abnormal';
-                }
+            // Calculate age
+            let age = 'N/A';
+            if (patient.date_of_birth) {
+              const birthDate = new Date(patient.date_of_birth);
+              const today = new Date();
+              age = today.getFullYear() - birthDate.getFullYear();
+              const monthDiff = today.getMonth() - birthDate.getMonth();
+              if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
               }
             }
-          } catch (recordErr) {
-            console.log('Error fetching last scan for patient:', recordErr.message);
+            
+            // Determine status
+            let status = 'Normal';
+            if (latestRecord && latestRecord.diagnosis) {
+              const diagnosis = latestRecord.diagnosis.toLowerCase();
+              if (diagnosis.includes('abnormal') || diagnosis.includes('suspicious') || diagnosis.includes('concerning')) {
+                status = 'Abnormal';
+              }
+            }
+            
+            recentPatients.push({
+              id: patient._id.toString(),
+              name: patient.full_name || patient.name || patient.email?.split('@')[0] || 'Unknown',
+              age: age,
+              lastScan: latestRecord ? latestRecord.created_at.toISOString().split('T')[0] : 'No scans',
+              status: status
+            });
+          } catch (patientErr) {
+            console.log('Error processing patient:', patientErr.message);
+            recentPatients.push({
+              id: patient._id.toString(),
+              name: patient.full_name || patient.name || patient.email?.split('@')[0] || 'Unknown',
+              age: 'N/A',
+              lastScan: 'No scans',
+              status: 'Normal'
+            });
           }
-          
-          recentPatients.push({
-            id: patient._id.toString(),
-            name: patient.full_name || patient.name || patient.email?.split('@')[0] || 'Unknown',
-            email: patient.email,
-            age: patient.age || null, // Age field might not exist
-            lastScan,
-            status,
-            registeredDate: patient.created_at ? patient.created_at.toISOString().split('T')[0] : 'Unknown'
-          });
         }
         
         console.log(`✅ Processed ${recentPatients.length} patient records`);
@@ -401,6 +408,262 @@ router.get('/scan/:id', requireDoctor, async (req, res) => {
       message: 'Error loading scan details', 
       error: error.message 
     });
+  }
+});
+
+// API lấy danh sách patients với pagination và filters - SỬ DỤNG DỮ LIỆU THẬT
+router.get('/patients', requireDoctor, async (req, res) => {
+  try {
+    const dbRead = await getDbRead();
+    
+    // Parse query parameters
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+    const search = req.query.search || '';
+    const diagnosis = req.query.diagnosis || '';
+    const scanType = req.query.scanType || '';
+    const startDate = req.query.startDate || '';
+    const endDate = req.query.endDate || '';
+    const sortBy = req.query.sortBy || 'created_at';
+    const sortOrder = req.query.sortOrder === 'asc' ? 1 : -1;
+    
+    let patients = [];
+    let totalPatients = 0;
+    
+    try {
+      const usersCollection = dbRead.collection('users');
+      const medicalRecordsCollection = dbRead.collection('medical_records');
+      
+      // Build search filter
+      let userFilter = {
+        is_active: true,
+        is_staff: { $ne: true },
+        is_superuser: { $ne: true }
+      };
+      
+      // Add search by name, email, phone
+      if (search) {
+        userFilter.$or = [
+          { full_name: { $regex: search, $options: 'i' } },
+          { name: { $regex: search, $options: 'i' } },
+          { email: { $regex: search, $options: 'i' } },
+          { phone: { $regex: search, $options: 'i' } }
+        ];
+      }
+      
+      // Get patients
+      const usersData = await usersCollection
+        .find(userFilter)
+        .sort({ [sortBy]: sortOrder })
+        .skip(skip)
+        .limit(limit)
+        .toArray();
+      
+      totalPatients = await usersCollection.countDocuments(userFilter);
+      
+      // Join with medical records to get latest scan and diagnosis info
+      for (let user of usersData) {
+        try {
+          // Find latest medical record for this patient
+          let medicalFilter = {
+            $or: [
+              { patient_id: user._id.toString() },
+              { user_id: user._id.toString() }
+            ]
+          };
+          
+          // Add diagnosis filter if specified
+          if (diagnosis) {
+            medicalFilter.diagnosis = { $regex: diagnosis, $options: 'i' };
+          }
+          
+          // Add scan type filter if specified
+          if (scanType) {
+            medicalFilter.scan_type = { $regex: scanType, $options: 'i' };
+          }
+          
+          // Add date range filter if specified
+          if (startDate || endDate) {
+            medicalFilter.created_at = {};
+            if (startDate) {
+              medicalFilter.created_at.$gte = new Date(startDate);
+            }
+            if (endDate) {
+              medicalFilter.created_at.$lte = new Date(endDate + 'T23:59:59.999Z');
+            }
+          }
+          
+          const latestRecord = await medicalRecordsCollection
+            .findOne(medicalFilter, { sort: { created_at: -1 } });
+          
+          // Calculate age from date of birth
+          let age = 'N/A';
+          if (user.date_of_birth) {
+            const birthDate = new Date(user.date_of_birth);
+            const today = new Date();
+            age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+              age--;
+            }
+          }
+          
+          // Generate patient ID format
+          const patientId = `PT-${new Date().getFullYear()}-${user._id.toString().slice(-3).padStart(3, '0')}`;
+          
+          const patientData = {
+            id: user._id.toString(),
+            patientId,
+            name: user.full_name || user.name || user.email?.split('@')[0] || 'Unknown',
+            email: user.email,
+            phone: user.phone || 'N/A',
+            dateOfBirth: user.date_of_birth ? new Date(user.date_of_birth).toLocaleDateString('en-US', { 
+              month: 'short', 
+              day: 'numeric', 
+              year: 'numeric' 
+            }) : 'Mar 15, 1985',
+            age,
+            gender: user.gender || 'Female',
+            lastDiagnosis: latestRecord?.diagnosis || latestRecord?.analysis_result || 'Normal',
+            lastScan: latestRecord ? latestRecord.created_at : null,
+            lastScanType: latestRecord?.scan_type || latestRecord?.type || 'N/A',
+            status: latestRecord ? (
+              (latestRecord.diagnosis && (latestRecord.diagnosis.toLowerCase().includes('abnormal') || 
+                                        latestRecord.diagnosis.toLowerCase().includes('suspicious'))) ? 'abnormal' : 'normal'
+            ) : 'no-records',
+            totalScans: 0,
+            createdAt: user.created_at
+          };
+          
+          // Count total scans for this patient
+          const totalScans = await medicalRecordsCollection.countDocuments({
+            $or: [
+              { patient_id: user._id.toString() },
+              { user_id: user._id.toString() }
+            ]
+          });
+          patientData.totalScans = totalScans;
+          
+          patients.push(patientData);
+          
+        } catch (recordErr) {
+          console.log('Error processing patient record:', recordErr.message);
+          
+          // Add patient even without medical records
+          const patientId = `PT-${new Date().getFullYear()}-${user._id.toString().slice(-3).padStart(3, '0')}`;
+          patients.push({
+            id: user._id.toString(),
+            patientId,
+            name: user.full_name || user.name || user.email?.split('@')[0] || 'Unknown',
+            email: user.email,
+            phone: user.phone || 'N/A',
+            dateOfBirth: user.date_of_birth ? new Date(user.date_of_birth).toLocaleDateString('en-US', { 
+              month: 'short', 
+              day: 'numeric', 
+              year: 'numeric' 
+            }) : 'Mar 15, 1985',
+            age: 'N/A',
+            gender: user.gender || 'Female',
+            lastDiagnosis: 'Normal',
+            lastScan: null,
+            lastScanType: 'N/A',
+            status: 'no-records',
+            totalScans: 0,
+            createdAt: user.created_at
+          });
+        }
+      }
+      
+      console.log(`✅ Found ${patients.length} patients with records`);
+      
+    } catch (err) {
+      console.log('❌ Error loading patients:', err.message);
+    }
+    
+    // Calculate pagination
+    const totalPages = Math.ceil(totalPatients / limit);
+    
+    res.json({
+      patients,
+      pagination: {
+        currentPage: page,
+        totalPages,
+        totalPatients,
+        limit,
+        hasNext: page < totalPages,
+        hasPrev: page > 1
+      }
+    });
+    
+  } catch (error) {
+    console.error('❌ Error loading patients:', error);
+    res.status(500).json({ 
+      message: 'Error loading patients', 
+      error: error.message 
+    });
+  }
+});
+
+// API lấy danh sách diagnoses để làm filter options
+router.get('/diagnoses', requireDoctor, async (req, res) => {
+  try {
+    const dbRead = await getDbRead();
+    
+    let diagnoses = [];
+    
+    try {
+      const medicalRecordsCollection = dbRead.collection('medical_records');
+      
+      // Get unique diagnoses
+      const uniqueDiagnoses = await medicalRecordsCollection.distinct('diagnosis', {
+        diagnosis: { $exists: true, $ne: null, $ne: '' }
+      });
+      
+      diagnoses = uniqueDiagnoses.filter(d => d && d.trim()).slice(0, 20); // Limit to 20
+      
+    } catch (err) {
+      console.log('❌ Error loading diagnoses:', err.message);
+    }
+    
+    res.json({ diagnoses });
+    
+  } catch (error) {
+    console.error('❌ Error loading diagnoses:', error);
+    res.status(500).json({ message: 'Error loading diagnoses', error: error.message });
+  }
+});
+
+// API lấy danh sách scan types để làm filter options
+router.get('/scan-types', requireDoctor, async (req, res) => {
+  try {
+    const dbRead = await getDbRead();
+    
+    let scanTypes = [];
+    
+    try {
+      const medicalRecordsCollection = dbRead.collection('medical_records');
+      
+      // Get unique scan types
+      const uniqueScanTypes = await medicalRecordsCollection.distinct('scan_type', {
+        scan_type: { $exists: true, $ne: null, $ne: '' }
+      });
+      
+      const uniqueTypes = await medicalRecordsCollection.distinct('type', {
+        type: { $exists: true, $ne: null, $ne: '' }
+      });
+      
+      scanTypes = [...new Set([...uniqueScanTypes, ...uniqueTypes])].filter(t => t && t.trim()).slice(0, 20);
+      
+    } catch (err) {
+      console.log('❌ Error loading scan types:', err.message);
+    }
+    
+    res.json({ scanTypes });
+    
+  } catch (error) {
+    console.error('❌ Error loading scan types:', error);
+    res.status(500).json({ message: 'Error loading scan types', error: error.message });
   }
 });
 
