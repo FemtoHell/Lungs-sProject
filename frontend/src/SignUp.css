@@ -26,6 +26,7 @@ html, body {
   display: flex;
   align-items: stretch; /* Thay đổi từ center sang stretch */
   justify-content: flex-end;
+  padding-left: 20%;
 }
 
 /* Form section - chiếm 50% bên phải, từ đầu đến cuối màn hình */
