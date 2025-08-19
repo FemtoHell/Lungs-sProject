@@ -1,5 +1,6 @@
 const express = require('express');
 const { requireAdmin } = require('./auth.admin.middleware');
+const bcrypt = require('bcryptjs');
 const router = express.Router();
 
 const { ObjectId } = require('mongodb');
@@ -314,7 +315,7 @@ router.get('/logs/action-types', requireAdmin, async (req, res) => {
   }
 });
 
-// API lấy danh sách users với phân quyền - EXISTING CODE
+// API lấy danh sách users với phân quyền
 router.get('/users', requireAdmin, async (req, res) => {
   try {
     console.log('🔍 Loading users request from:', req.user?.email);
@@ -425,6 +426,351 @@ router.get('/users', requireAdmin, async (req, res) => {
       message: 'Error loading users', 
       error: error.message,
       details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
+  }
+});
+
+// ✅ API để admin tạo user mới - ROUTE MỚI QUAN TRỌNG
+router.post('/users', requireAdmin, async (req, res) => {
+  try {
+    console.log('🔐 Admin creating new user:', req.user?.email);
+    console.log('📝 User data received:', { ...req.body, password: '[HIDDEN]' });
+    
+    const { email, password, full_name, role } = req.body;
+    
+    // Validation chi tiết
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email and password are required' });
+    }
+    
+    if (password.length < 6) {
+      return res.status(400).json({ message: 'Password must be at least 6 characters' });
+    }
+    
+    if (!email.includes('@') || !email.includes('.')) {
+      return res.status(400).json({ message: 'Invalid email format' });
+    }
+    
+    // Xác định role permissions
+    let is_superuser = false;
+    let is_staff = false;
+    let is_active = true; // Admin tạo user sẽ active luôn, không cần verify email
+    
+    if (role === 'Administrator') {
+      is_superuser = true;
+      is_staff = true;
+    } else if (role === 'Doctor') {
+      is_staff = true;
+    }
+    // Patient: giữ mặc định false cho cả 2
+    
+    console.log('🎭 Role mapping:', { role, is_superuser, is_staff, is_active });
+    
+    const dbWrite = await getDbWrite();
+    const dbRead = await getDbRead();
+    
+    // Kiểm tra email đã tồn tại (dùng DB read để kiểm tra)
+    let existing = null;
+    try {
+      const collections = await dbRead.listCollections({ name: 'users' }).toArray();
+      if (collections.length > 0) {
+        existing = await dbRead.collection('users').findOne({ email });
+      }
+    } catch (err) {
+      console.log('📝 Users collection does not exist yet, proceeding to create first user');
+    }
+    
+    if (existing) {
+      console.log('❌ Email already exists:', email);
+      return res.status(409).json({ message: 'Email already exists' });
+    }
+    
+    // Hash password an toàn
+    console.log('🔒 Hashing password...');
+    const hashedPassword = await bcrypt.hash(password, 12); // Tăng salt rounds lên 12 để bảo mật hơn
+    
+    // Tạo user object hoàn chỉnh
+    const newUser = {
+      email,
+      password: hashedPassword,
+      full_name: full_name || '',
+      created_at: new Date(),
+      updated_at: new Date(),
+      is_active,
+      is_superuser,
+      is_staff,
+      roles: [],
+      extra_permissions: [],
+      created_by: req.user.user_id, // Track admin nào tạo user này
+      provider: 'manual' // Phân biệt với Google OAuth
+    };
+    
+    console.log('💾 Inserting user to database...');
+    
+    // Insert vào database (sử dụng write DB)
+    const users = dbWrite.collection('users');
+    const result = await users.insertOne(newUser);
+    
+    console.log('✅ User created successfully with ID:', result.insertedId);
+    
+    // Clear cache nếu có để đảm bảo data consistency
+    try {
+      const redis = req.app.get('redis');
+      if (redis) {
+        await redis.del(`user:${email}`);
+        console.log('🗑️ Cache cleared for new user');
+      }
+    } catch (cacheErr) {
+      console.warn('⚠️ Cache clear error:', cacheErr.message);
+    }
+    
+    // Trả về thông tin user (KHÔNG bao gồm password)
+    const userResponse = { 
+      ...newUser, 
+      _id: result.insertedId,
+    };
+    delete userResponse.password;
+    
+    console.log('🎉 User creation completed successfully');
+    
+    res.status(201).json({ 
+      message: 'User created successfully', 
+      user: userResponse 
+    });
+    
+  } catch (error) {
+    console.error('❌ Error creating user:', error);
+    res.status(500).json({ 
+      message: 'Error creating user', 
+      error: error.message,
+      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
+  }
+});
+
+// ✅ API để admin cập nhật user - ROUTE MỚI
+router.put('/users/:userId', requireAdmin, async (req, res) => {
+  try {
+    console.log('✏️ Admin updating user:', req.params.userId, 'by:', req.user?.email);
+    
+    const { userId } = req.params;
+    const { email, full_name, role, is_active } = req.body;
+    
+    if (!userId || userId === 'undefined') {
+      return res.status(400).json({ message: 'Invalid user ID' });
+    }
+    
+    // Xác định role permissions
+    let is_superuser = false;
+    let is_staff = false;
+    
+    if (role === 'Administrator') {
+      is_superuser = true;
+      is_staff = true;
+    } else if (role === 'Doctor') {
+      is_staff = true;
+    }
+    
+    const dbWrite = await getDbWrite();
+    const users = dbWrite.collection('users');
+    
+    // Kiểm tra user tồn tại
+    const existingUser = await users.findOne({ _id: new ObjectId(userId) });
+    if (!existingUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    // Chuẩn bị update object
+    const updateData = {
+      updated_at: new Date(),
+      updated_by: req.user.user_id
+    };
+    
+    if (email && email !== existingUser.email) {
+      // Kiểm tra email mới có trùng không
+      const emailExists = await users.findOne({ 
+        email, 
+        _id: { $ne: new ObjectId(userId) } 
+      });
+      if (emailExists) {
+        return res.status(409).json({ message: 'Email already exists' });
+      }
+      updateData.email = email;
+    }
+    
+    if (full_name !== undefined) updateData.full_name = full_name;
+    if (is_active !== undefined) updateData.is_active = is_active;
+    
+    updateData.is_superuser = is_superuser;
+    updateData.is_staff = is_staff;
+    
+    // Cập nhật user
+    const result = await users.updateOne(
+      { _id: new ObjectId(userId) },
+      { $set: updateData }
+    );
+    
+    if (result.modifiedCount === 0) {
+      return res.status(404).json({ message: 'User not found or no changes made' });
+    }
+    
+    console.log('✅ User updated successfully:', userId);
+    
+    // Clear cache
+    try {
+      const redis = req.app.get('redis');
+      if (redis) {
+        await redis.del(`user:${existingUser.email}`);
+        await redis.del(`user_profile:${userId}`);
+        if (email && email !== existingUser.email) {
+          await redis.del(`user:${email}`);
+        }
+      }
+    } catch (cacheErr) {
+      console.warn('Cache clear error:', cacheErr.message);
+    }
+    
+    res.json({ message: 'User updated successfully' });
+    
+  } catch (error) {
+    console.error('❌ Error updating user:', error);
+    res.status(500).json({ 
+      message: 'Error updating user', 
+      error: error.message 
+    });
+  }
+});
+
+// ✅ API để admin xóa user - ROUTE MỚI
+router.delete('/users/:userId', requireAdmin, async (req, res) => {
+  try {
+    console.log('🗑️ Admin deleting user:', req.params.userId, 'by:', req.user?.email);
+    
+    const { userId } = req.params;
+    
+    if (!userId || userId === 'undefined') {
+      return res.status(400).json({ message: 'Invalid user ID' });
+    }
+    
+    const dbWrite = await getDbWrite();
+    const users = dbWrite.collection('users');
+    
+    // Kiểm tra user tồn tại và lấy thông tin
+    const userToDelete = await users.findOne({ _id: new ObjectId(userId) });
+    if (!userToDelete) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    // Không cho phép admin xóa chính mình
+    if (userToDelete._id.toString() === req.user.user_id.toString()) {
+      return res.status(400).json({ message: 'Cannot delete your own account' });
+    }
+    
+    // Xóa user khỏi database
+    const result = await users.deleteOne({ _id: new ObjectId(userId) });
+    
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    console.log('✅ User deleted successfully:', userId);
+    
+    // Xóa các related data (authentication records, etc.)
+    try {
+      const authentication = dbWrite.collection('authentication');
+      await authentication.deleteMany({ user_id: new ObjectId(userId) });
+      console.log('🗑️ Cleaned up authentication records');
+    } catch (cleanupErr) {
+      console.warn('⚠️ Error cleaning up authentication records:', cleanupErr.message);
+    }
+    
+    // Clear cache
+    try {
+      const redis = req.app.get('redis');
+      if (redis) {
+        await redis.del(`user:${userToDelete.email}`);
+        await redis.del(`user_profile:${userId}`);
+      }
+    } catch (cacheErr) {
+      console.warn('Cache clear error:', cacheErr.message);
+    }
+    
+    res.json({ message: 'User deleted successfully' });
+    
+  } catch (error) {
+    console.error('❌ Error deleting user:', error);
+    res.status(500).json({ 
+      message: 'Error deleting user', 
+      error: error.message 
+    });
+  }
+});
+
+// ✅ API để admin reset password cho user - ROUTE MỚI
+router.post('/users/:userId/reset-password', requireAdmin, async (req, res) => {
+  try {
+    console.log('🔑 Admin resetting password for user:', req.params.userId);
+    
+    const { userId } = req.params;
+    const { newPassword } = req.body;
+    
+    if (!userId || userId === 'undefined') {
+      return res.status(400).json({ message: 'Invalid user ID' });
+    }
+    
+    if (!newPassword || newPassword.length < 6) {
+      return res.status(400).json({ message: 'New password must be at least 6 characters' });
+    }
+    
+    const dbWrite = await getDbWrite();
+    const users = dbWrite.collection('users');
+    
+    // Kiểm tra user tồn tại
+    const userExists = await users.findOne({ _id: new ObjectId(userId) });
+    if (!userExists) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    // Hash password mới
+    const hashedPassword = await bcrypt.hash(newPassword, 12);
+    
+    // Cập nhật password
+    const result = await users.updateOne(
+      { _id: new ObjectId(userId) },
+      { 
+        $set: { 
+          password: hashedPassword,
+          updated_at: new Date(),
+          password_reset_by: req.user.user_id,
+          password_reset_at: new Date()
+        } 
+      }
+    );
+    
+    if (result.modifiedCount === 0) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    console.log('✅ Password reset successfully for user:', userId);
+    
+    // Clear cache
+    try {
+      const redis = req.app.get('redis');
+      if (redis) {
+        await redis.del(`user:${userExists.email}`);
+        await redis.del(`user_profile:${userId}`);
+      }
+    } catch (cacheErr) {
+      console.warn('Cache clear error:', cacheErr.message);
+    }
+    
+    res.json({ message: 'Password reset successfully' });
+    
+  } catch (error) {
+    console.error('❌ Error resetting password:', error);
+    res.status(500).json({ 
+      message: 'Error resetting password', 
+      error: error.message 
     });
   }
 });

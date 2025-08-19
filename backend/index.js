@@ -42,14 +42,18 @@ if (process.env.USE_RATE_LIMIT === 'true') {
   }));
 }
 
-
 app.get('/', (req, res) => {
   res.send('Backend is working!');
 });
+
+// Import routes
 const adminRoutes = require('./src/admin.routes');
+const doctorRoutes = require('./src/doctor.routes'); // THÊM DÒNG NÀY
+
+// Mount routes
 app.use('/auth', require('./src/auth.routes'));
 app.use('/admin', adminRoutes);
-
+app.use('/doctor', doctorRoutes); // THÊM DÒNG NÀY
 app.use('/auth', require('./src/oauth.routes'));
  
 app.use((err, req, res, next) => {
@@ -59,6 +63,7 @@ app.use((err, req, res, next) => {
     error: process.env.NODE_ENV === 'production' ? undefined : err.stack
   });
 }); 
+
 app.use((req, res) => {
   res.status(404).json({ message: 'Not found' });
 });
