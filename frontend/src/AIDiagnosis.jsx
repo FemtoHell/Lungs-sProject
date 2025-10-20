@@ -116,8 +116,7 @@ export default function AIDiagnosis({ user, onLogout, onNavigate }) {
       <div className="ai-top-header">
         <div className="ai-top-left">
           <div className="ai-logo-small">
-            <span className="logo-icon">🫁</span>
-            <span className="logo-text">MediDiagnose AI</span>
+            <img src="/images/DH_VLU.png" alt="VLU Logo" className="logo-image" />
           </div>
         </div>
         <div className="ai-top-right">

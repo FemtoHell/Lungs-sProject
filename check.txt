@@ -1,0 +1,5571 @@
+1.1. Cấu trúc Layout chung
+Tất cả các giao diện sau khi đăng nhập đều tuân theo cấu trúc 2 cột:
+
+Cột trái (Sidebar): Width ~240px, fixed position, chiều cao 100vh
+Cột phải (Main Content): Width còn lại (calc(100% - 240px)), có thể scroll
+
+Đặc điểm chung:
+
+Border-radius: 8-12px cho cards và buttons
+Box-shadow: 0 1px 3px rgba(0,0,0,0.1) cho elevation nhẹ
+Padding container: 24-32px
+Gap giữa các elements: 16-24px
+
+
+2. GIAO DIỆN AUTHENTICATION (ĐĂNG NHẬP & ĐĂNG KÝ)
+2.1. Màn hình SIGN IN - Đăng nhập Bệnh nhân
+VỊ TRÍ & BỐ CỤC TỔNG THỂ:
+
+Layout: Full screen, chia 2 phần không đều (60:40)
+Phần trái (60%): Background image
+Phần phải (40%): Form đăng nhập
+
+PHẦN BACKGROUND (Bên trái - 60% width):
+Vị trí:
+
+Position: Fixed left
+Width: 60vw
+Height: 100vh
+
+Hình ảnh:
+
+Ảnh bệnh viện Đa khoa Tâm Trí Nha Trang
+Tòa nhà 7-8 tầng, màu trắng tinh, kiến trúc hiện đại
+Logo hình trái tim màu xanh cyan (#00BCD4) kích thước lớn ở mặt tiền
+Text "BỆNH VIỆN ĐA KHOA TÂM TRÍ NHA TRANG" (chữ đỏ)
+Background: Bầu trời xanh có mây, bãi cỏ xanh phía trước
+Filter: Brightness(1.1), saturation(1.05)
+
+Overlay:
+
+Gradient: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 197, 253, 0.05) 100%)
+Tạo lớp phủ xanh nhạt lên ảnh
+
+PHẦN FORM ĐĂNG NHẬP (Bên phải - 40% width):
+Container chính:
+
+Position: Fixed right
+Width: 40vw
+Height: 100vh
+Background: rgba(255, 255, 255, 0.95) - trắng trong suốt 95%
+Backdrop-filter: blur(20px) - hiệu ứng kính mờ
+Box-shadow: -4px 0 24px rgba(0, 0, 0, 0.08) - đổ bóng sang trái
+
+Tiêu đề trang (góc trên trái):
+
+Position: Absolute top-left
+Top: 20px
+Left: 20px
+Text: "Sign In Benh Nhan"
+Font-size: 18px
+Color: #3B82F6 (xanh dương)
+Font-weight: 500
+Letter-spacing: 0.5px
+
+Panel form (trung tâm vertical):
+
+Width: 420px
+Max-width: 90%
+Margin: Auto (center horizontal)
+Vertical position: Centered (transform: translateY(-50%))
+Padding: 48px 40px
+Background: rgba(255, 255, 255, 0.7)
+Backdrop-filter: blur(10px)
+Border: 1px solid rgba(255, 255, 255, 0.3)
+Border-radius: 16px
+Box-shadow: 0 8px 32px rgba(59, 130, 246, 0.12)
+
+CẤU TRÚC FORM CHI TIẾT:
+1. Heading "Sign In":
+
+Position: Top của panel
+Margin-bottom: 32px
+Font-size: 32px
+Font-weight: 700
+Color: #1E293B (xanh navy đậm)
+Text-align: Left
+Line-height: 1.2
+
+2. Input "Email Address":
+
+Margin-bottom: 20px
+Label:
+
+Font-size: 14px
+Font-weight: 600
+Color: #334155 (xanh xám)
+Margin-bottom: 8px
+Display: Block
+
+
+Input field:
+
+Width: 100%
+Height: 48px
+Padding: 12px 16px 12px 44px (để chừa chỗ cho icon)
+Background: #FFFFFF
+Border: 1.5px solid #E2E8F0 (xám nhạt)
+Border-radius: 8px
+Font-size: 15px
+Color: #1E293B
+Transition: all 0.2s ease
+
+
+Icon envelope:
+
+Position: Absolute left
+Left: 14px
+Top: 50% (transform: translateY(-50%))
+Color: #94A3B8 (xám trung)
+Size: 18px
+
+
+Focus state:
+
+Border-color: #3B82F6
+Box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1)
+Outline: None
+
+
+Placeholder:
+
+Text: "Enter your email address"
+Color: #CBD5E1 (xám nhạt)
+Font-style: Italic (optional)
+
+
+
+3. Input "Password":
+
+Cấu trúc tương tự Email
+Margin-bottom: 16px
+Icon: Key (khóa) thay vì envelope
+Type: Password (hiển thị dấu chấm)
+Toggle show/hide password:
+
+Position: Absolute right
+Right: 14px
+Top: 50%
+Icon: Eye / Eye-slash
+Color: #94A3B8
+Size: 18px
+Cursor: Pointer
+Hover color: #3B82F6
+
+
+
+4. Checkbox "Remember me":
+
+Margin-bottom: 24px
+Display: Flex
+Align-items: Center
+Gap: 8px
+Checkbox:
+
+Width: 18px
+Height: 18px
+Border: 2px solid #3B82F6
+Border-radius: 4px
+Background: Transparent
+Checked background: #3B82F6
+Checked icon: White checkmark
+
+
+Label:
+
+Font-size: 14px
+Color: #475569
+Font-weight: 500
+Cursor: Pointer
+
+
+
+5. Button "Sign Up":
+
+Width: 100%
+Height: 52px
+Background: Linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)
+Border: None
+Border-radius: 10px
+Color: #FFFFFF
+Font-size: 16px
+Font-weight: 600
+Letter-spacing: 0.3px
+Cursor: Pointer
+Transition: all 0.3s ease
+Box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3)
+Hover state:
+
+Transform: translateY(-2px)
+Box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4)
+Background: Linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)
+
+
+Active state:
+
+Transform: translateY(0)
+Box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3)
+
+
+
+6. Divider "Or":
+
+Margin: 28px 0
+Display: Flex
+Align-items: Center
+Text-align: Center
+Line (trái & phải):
+
+Flex: 1
+Height: 1px
+Background: #E2E8F0
+
+
+Text "Or":
+
+Padding: 0 16px
+Font-size: 13px
+Color: #94A3B8
+Font-weight: 500
+Text-transform: Uppercase
+Letter-spacing: 1px
+
+
+
+7. Button "Sign in with Google":
+
+Width: 100%
+Height: 48px
+Background: #FFFFFF
+Border: 1.5px solid #E2E8F0
+Border-radius: 8px
+Display: Flex
+Align-items: Center
+Justify-content: Center
+Gap: 12px
+Margin-bottom: 12px
+Cursor: Pointer
+Transition: all 0.2s ease
+Logo Google:
+
+Width: 20px
+Height: 20px
+Position: Relative left
+
+
+Text:
+
+Font-size: 15px
+Color: #1E293B
+Font-weight: 500
+
+
+Hover state:
+
+Background: #F8FAFC
+Border-color: #CBD5E1
+Box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06)
+
+
+
+8. Button "Sign in with Microsoft":
+
+Cấu trúc giống Google button
+Margin-bottom: 24px
+Logo: Microsoft (4 ô vuông màu)
+
+9. Footer link:
+
+Text-align: Center
+Font-size: 14px
+Color: #64748B
+Link "Sign in":
+
+Color: #3B82F6
+Font-weight: 600
+Text-decoration: None
+Hover: Text-decoration: Underline
+
+
+
+2.2. Màn hình SIGN UP - Đăng ký Bệnh nhân
+VỊ TRÍ & BỐ CỤC:
+
+Layout tương tự Sign In (60:40)
+Background giống hệt Sign In
+Panel form có cấu trúc tương tự nhưng thêm trường
+
+KHÁC BIỆT SO VỚI SIGN IN:
+Tiêu đề trang:
+
+Text: "Sign Up Benh Nhan" (thay vì Sign In)
+
+Heading panel:
+
+Text: "Sign Up"
+
+Input fields (thứ tự từ trên xuống):
+
+Email Address - giống Sign In
+Password - giống Sign In
+
+Margin-bottom: 20px
+
+
+Confirm Password - mới thêm
+
+Cấu trúc giống Password
+Label: "Confirm Password"
+Placeholder: "Enter your password for confirm"
+Icon: Key
+Margin-bottom: 16px
+
+
+Checkbox "Show password" - thay thế Remember me
+
+Text: "Show password"
+Icon: Eye (khi unchecked) / Eye-slash (khi checked)
+Margin-bottom: 24px
+Chức năng: Toggle hiển thị cả 2 ô password
+
+
+
+Buttons:
+
+Button chính: "Sign Up" (thay vì "Sign Up" ở Sign In)
+Google & Microsoft buttons: Text "Sign up with..." (thay vì "Sign in with...")
+
+Footer:
+
+Text: "Already have an account? Sign in"
+Link "Sign in" màu xanh #3B82F6
+
+2.3. Màn hình CREATE ACCOUNT (ADMIN)
+VỊ TRÍ & BỐ CỤC:
+
+Layout: 50:50 (khác với Sign In/Sign Up)
+Background: Toàn màn hình (không overlay)
+Form: Nổi ở trung tâm màn hình
+
+BACKGROUND (Full screen):
+
+Ảnh bệnh viện giống Sign In/Sign Up
+Width: 100vw
+Height: 100vh
+Object-fit: Cover
+Filter: Brightness(0.75) - tối hơn để highlight form
+Overlay: Linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(51, 65, 85, 0.6) 100%)
+
+PANEL FORM (Center overlay):
+Container:
+
+Position: Absolute center (top: 50%, left: 50%, transform: translate(-50%, -50%))
+Width: 520px
+Max-width: 90vw
+Padding: 48px 44px
+Background: rgba(255, 255, 255, 0.95)
+Backdrop-filter: blur(30px) - mờ mạnh hơn
+Border: 1px solid rgba(255, 255, 255, 0.4)
+Border-radius: 20px
+Box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3) - bóng đậm hơn
+
+1. Heading "Create Account(Admin)":
+
+Font-size: 28px
+Font-weight: 700
+Color: #1E293B
+Text-align: Center
+Margin-bottom: 12px
+
+2. Subtitle (tiếng Trung):
+
+Text: "Join our medical AI platform to enhance patient care"
+Font-size: 14px
+Color: #64748B
+Text-align: Center
+Margin-bottom: 28px
+Line-height: 1.5
+
+3. Alert Box "Account Creation Notice":
+
+Width: 100%
+Padding: 14px 16px
+Background: #FEF3C7 (vàng nhạt)
+Border-left: 4px solid #F59E0B (cam)
+Border-radius: 8px
+Margin-bottom: 24px
+Icon (warning):
+
+Position: Absolute left
+Color: #F59E0B
+Size: 18px
+Top: 16px
+Left: 16px
+
+
+Heading:
+
+Font-size: 14px
+Font-weight: 600
+Color: #92400E (nâu đậm)
+Margin-bottom: 6px
+
+
+Body text:
+
+Font-size: 13px
+Color: #78350F
+Line-height: 1.5
+Padding-left: 28px (để tránh icon)
+
+
+
+4. Form Grid (2 columns):
+Row 1 - Name fields (2 cột):
+
+Display: Grid
+Grid-template-columns: 1fr 1fr
+Gap: 16px
+Margin-bottom: 20px
+
+a) First Name (cột trái):
+
+Label: "First Name"
+Font-size: 13px
+Font-weight: 600
+Color: #334155
+Margin-bottom: 6px
+Input:
+
+Height: 44px
+Padding: 10px 14px
+Background: #FFFFFF
+Border: 1.5px solid #E2E8F0
+Border-radius: 8px
+Font-size: 14px
+Placeholder: "Enter first name"
+
+
+
+b) Last Name (cột phải):
+
+Cấu trúc giống First Name
+Placeholder: "Enter last name"
+
+Row 2 - Email (full width):
+
+Margin-bottom: 20px
+Label: "Email"
+Input:
+
+Icon: Envelope (left, 14px)
+Padding-left: 42px
+Placeholder: "Enter your email"
+Cấu trúc khác giống Name fields
+
+
+
+Row 3 - Role & Facility (2 cột):
+
+Grid: 1fr 1fr
+Gap: 16px
+Margin-bottom: 20px
+
+a) Doctor (cột trái):
+
+Dropdown/Select field
+Height: 44px
+Background: #FFFFFF
+Border: 1.5px solid #E2E8F0
+Border-radius: 8px
+Padding: 10px 14px
+Icon: Chevron-down (right)
+Selected value: "Doctor"
+
+b) Facility name (cột phải):
+
+Input field
+Placeholder: "Enter facility name"
+Cấu trúc giống Name fields
+
+Row 4 - Create password (full width):
+
+Margin-bottom: 20px
+Label: "Create password"
+Input:
+
+Icon: Key (left)
+Icon: Eye/Eye-slash (right) - toggle visibility
+Type: Password
+Padding: 10px 44px 10px 42px (cả 2 bên đều có icon)
+Placeholder: "Create your password"
+
+
+
+Row 5 - Confirm password (full width):
+
+Margin-bottom: 20px
+Label: "Confirm password"
+Cấu trúc giống Create password
+Placeholder: "Confirm your password"
+
+Row 6 - Terms checkbox:
+
+Margin-bottom: 28px
+Display: Flex
+Gap: 10px
+Checkbox:
+
+Width: 18px
+Height: 18px
+Border: 2px solid #3B82F6
+Border-radius: 4px
+Flex-shrink: 0
+
+
+Text:
+
+Font-size: 13px
+Color: #475569
+Line-height: 1.4
+Links "Terms of Service" và "Privacy Policy":
+
+Color: #3B82F6
+Font-weight: 600
+Text-decoration: None
+Hover: Underline
+
+
+
+
+
+5. Button "Request Account":
+
+Width: 100%
+Height: 50px
+Background: Linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)
+Border: None
+Border-radius: 10px
+Color: #FFFFFF
+Font-size: 16px
+Font-weight: 600
+Cursor: Pointer
+Margin-bottom: 24px
+Box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35)
+Hover:
+
+Transform: translateY(-2px)
+Box-shadow: 0 6px 20px rgba(59, 130, 246, 0.45)
+
+
+
+6. Divider "Or continue with":
+
+Margin: 24px 0
+Cấu trúc giống Sign In nhưng text "Or continue with"
+
+7. Social buttons (Google & Microsoft):
+
+Display: Grid
+Grid-template-columns: 1fr 1fr
+Gap: 12px
+Margin-bottom: 24px
+Mỗi button:
+
+Height: 46px
+Background: #FFFFFF
+Border: 1.5px solid #E2E8F0
+Border-radius: 8px
+Display: Flex
+Align-items: Center
+Justify-content: Center
+Gap: 8px
+Google (trái):
+
+Logo Google
+Text: "Google"
+
+
+Microsoft (phải):
+
+Logo Microsoft
+Text: "Microsoft"
+
+
+
+
+
+8. Footer:
+
+Text-align: Center
+Font-size: 14px
+Color: #64748B
+"Already have an account? Sign in"
+Link "Sign in": Color #3B82F6, Font-weight: 600
+
+
+3. GIAO DIỆN ADMIN SYSTEM
+3.1. SIDEBAR (Cố định bên trái)
+VỊ TRÍ & KÍCH THƯỚC:
+
+Position: Fixed left
+Width: 260px
+Height: 100vh
+Z-index: 1000
+Background: Linear-gradient(180deg, #1E293B 0%, #0F172A 100%) - xanh navy gradient
+Border-right: 1px solid rgba(255, 255, 255, 0.05)
+Box-shadow: 4px 0 24px rgba(0, 0, 0, 0.12)
+
+CẤU TRÚC TỪ TRÊN XUỐNG:
+1. HEADER SECTION (top):
+
+Padding: 24px 20px
+Border-bottom: 1px solid rgba(255, 255, 255, 0.08)
+
+a) Logo & Brand:
+
+Display: Flex
+Align-items: Center
+Gap: 12px
+Margin-bottom: 20px
+Icon phổi:
+
+Width: 32px
+Height: 32px
+Background: Linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%)
+Border-radius: 8px
+Display: Flex
+Align-items: Center
+Justify-content: Center
+SVG icon: White, size 18px
+
+
+Text "MediDiagnose AI":
+
+Font-size: 18px
+Font-weight: 700
+Color: #FFFFFF
+Letter-spacing: -0.3px
+
+
+
+b) System Status:
+
+Display: Flex
+Align-items: Center
+Gap: 8px
+Padding: 8px 12px
+Background: rgba(16, 185, 129, 0.1)
+Border-radius: 6px
+Green dot:
+
+Width: 6px
+Height: 6px
+Background: #10B981
+Border-radius: 50%
+Animation: Pulse 2s infinite
+
+
+Text "System Online":
+
+Font-size: 12px
+Color: #10B981
+Font-weight: 500
+
+
+
+c) User Info:
+
+Display: Flex
+Align-items: Center
+Gap: 10px
+Margin-top: 16px
+Avatar:
+
+Width: 36px
+Height: 36px
+Border-radius: 50%
+Border: 2px solid rgba(255, 255, 255, 0.15)
+Object-fit: Cover
+
+
+Info column:
+
+Flex: 1
+Name "System Admin":
+
+Font-size: 14px
+Font-weight: 600
+Color: #FFFFFF
+Margin-bottom: 2px
+
+
+Email "admin@mediai.com":
+
+Font-size: 11px
+Color: #94A3B8
+Font-weight: 400
+
+
+
+
+
+2. NAVIGATION MENU:
+
+Padding: 20px 16px
+Flex: 1 (chiếm không gian còn lại)
+
+Section: Main
+
+Label:
+
+Font-size: 11px
+Color: #64748B
+Text-transform: Uppercase
+Letter-spacing: 1px
+Font-weight: 600
+Margin-bottom: 8px
+Padding-left: 12px
+
+
+Menu Item: Dashboard
+
+Display: Flex
+Align-items: Center
+Gap: 12px
+Padding: 12px 14px
+Border-radius: 8px
+Cursor: Pointer
+Transition: all 0.2s ease
+Margin-bottom: 4px
+Default state:
+
+Background: Transparent
+Color: #CBD5E1
+
+
+Hover state:
+
+Background: rgba(255, 255, 255, 0.05)
+Color: #FFFFFF
+
+
+Icon:
+
+Size: 18px
+Color: Inherit
+Stroke-width: 2
+
+
+Text:
+
+Font-size: 14px
+Font-weight: 500
+Color: Inherit
+
+
+
+
+
+Section: Management (margin-top: 24px)
+
+Label giống section Main
+Menu Item: Users
+
+Cấu trúc giống Dashboard
+Icon: Users (2 người)
+
+
+Menu Item: Logs - ACTIVE STATE
+
+Background: rgba(59, 130, 246, 0.15)
+Color: #3B82F6
+Border-left: 3px solid #3B82F6
+Padding-left: 11px (để bù border)
+Icon color: #3B82F6
+Font-weight: 600
+
+
+
+Section: System (margin-top: 24px)
+
+Label giống trên
+Menu Item: Settings
+
+Cấu trúc giống Dashboard
+Icon: Gear/Cog
+
+
+Menu Item: Security
+
+Icon: Shield/Lock
+
+
+Menu Item: Help
+
+Icon: Question mark circle
+
+
+
+3. FOOTER SECTION (bottom):
+
+Padding: 20px
+Border-top: 1px solid rgba(255, 255, 255, 0.08)
+
+AI Assistant Button:
+
+Display: Flex
+Align-items: Center
+Gap: 12px
+Padding: 12px 14px
+Background: rgba(59, 130, 246, 0.1)
+Border: 1px solid rgba(59, 130, 246, 0.2)
+Border-radius: 10px
+Cursor: Pointer
+Width: 100%
+Transition: all 0.3s ease
+Icon robot:
+
+Width: 32px
+Height: 32px
+Background: Linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%)
+Border-radius: 50%
+Display: Flex
+Align-items: Center
+Justify-content: Center
+SVG: White, size 18px
+
+
+Text:
+
+Font-size: 14px
+Font-weight: 600
+Color: #3B82F6
+Subtext "Online":
+
+Font-size: 11px
+Color: #94A3B8
+Font-weight: 400
+
+
+
+
+Hover:
+
+Background: rgba(59, 130, 246, 0.2)
+Transform: translateY(-2px)
+Box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2)
+
+
+
+3.2. HEADER BAR (Trên cùng main content)
+VỊ TRÍ & KÍCH THƯỚC:
+
+Position: Sticky top 0
+Width: calc(100% - 260px) - trừ sidebar
+Height: 72px
+Margin-left: 260px
+Z-index: 100
+Background: #FFFFFF
+Border-bottom: 1px solid #E2E8F0
+Box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04)
+Backdrop-filter: Blur(10px) (khi scroll)
+
+NỘI DUNG:
+
+Padding: 0 32px
+Display: Flex
+Align-items: Center
+Justify-content: Space-between
+
+Bên trái - Page Title:
+
+Font-size: 24px
+Font-weight: 700
+Color: #1E293B
+Letter-spacing: -0.5px
+
+Bên phải - User Section:
+
+Display: Flex
+Align-items: Center
+Gap: 24px
+
+a) System Status:
+
+Display: Flex
+Align-items: Center
+Gap: 8px
+Green dot:
+
+Width: 8px
+Height: 8px
+Background: #10B981
+Border-radius: 50%
+Box-shadow: 0 0 8px rgba(16, 185, 129, 0.5)
+
+
+Text "System Online":
+
+Font-size: 13px
+Color: #10B981
+Font-weight: 600
+
+
+
+b) Notification Icon:
+
+Position: Relative
+Icon: Bell
+Size: 20px
+Color: #64748B
+Cursor: Pointer
+Badge (nếu có notification):
+
+Position: Absolute top-right
+Width: 18px
+Height: 18px
+Background: #EF4444 (đỏ)
+Border-radius: 50%
+Border: 2px solid #FFFFFF
+Font-size: 10px
+Color: #FFFFFF
+Font-weight: 700
+Display: Flex
+Align-items: Center
+Justify-content: Center
+Content: "1" hoặc số thông báo
+
+
+
+c) User Profile:
+
+Display: Flex
+Align-items: Center
+Gap: 12px
+Cursor: Pointer
+Padding: 8px 12px
+Border-radius: 10px
+Transition: Background 0.2s
+Hover:
+
+Background: #F8FAFC
+
+
+Avatar:
+
+Width: 40px
+Height: 40px
+Border-radius: 50%
+Border: 2px solid #E2E8F0
+Object-fit: Cover
+
+
+Info column:
+
+Name "System Admin":
+
+Font-size: 14px
+Font-weight: 600
+Color: #1E293B
+Margin-bottom: 2px
+
+
+Email "admin@mediai.com":
+
+Font-size: 12px
+Color: #64748B
+
+
+
+
+
+3.3. MAIN CONTENT AREA - DASHBOARD PAGE
+VỊ TRÍ & BỐ CỤC:
+
+Margin-left: 260px (sau sidebar)
+Padding: 32px
+Min-height: calc(100vh - 72px) - trừ header
+Background: #F8FAFC
+
+1. METRICS CARDS ROW:
+
+Display: Grid
+Grid-template-columns: Repeat(4, 1fr)
+Gap: 24px
+Margin-bottom: 32px
+
+Card 1 - Total Scans:
+
+Background: #FFFFFF
+Border-radius: 12px
+Padding: 24px
+Box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08)
+Border: 1px solid #E2E8F0
+Transition: all 0.3s ease
+Hover:
+
+Transform: translateY(-4px)
+Box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12)
+
+
+Layout (Flex):
+
+Justify-content: Space-between
+Align-items: Flex-start
+
+
+
+Bên trái:
+
+Label "Total Scans":
+
+Font-size: 14px
+Color: #64748B
+Font-weight: 500
+Margin-bottom: 8px
+
+
+Value "24,630":
+
+Font-size: 32px
+Font-weight: 700
+Color: #1E293B
+Margin-bottom: 8px
+Line-height: 1
+
+
+Trend indicator:
+
+Display: Flex
+Align-items: Center
+Gap: 4px
+Icon arrow-up:
+
+Size: 14px
+Color: #10B981
+
+
+Text "+12% from last month":
+
+Font-size: 12px
+Color: #10B981
+Font-weight: 500
+
+
+
+
+
+Bên phải - Icon:
+
+Width: 48px
+Height: 48px
+Background: rgba(59, 130, 246, 0.1)
+Border-radius: 12px
+Display: Flex
+Align-items: Center
+Justify-content: Center
+SVG scan icon:
+
+Size: 24px
+Color: #3B82F6
+
+
+
+Card 2 - Active Doctors:
+
+Cấu trúc giống Card 1
+
+Khác biệt:
+
+Label: "Active Doctors"
+Value: "114"
+Trend: "+5% from last week" (xanh lá)
+Icon background: rgba(16, 185, 129, 0.1)
+Icon color: #10B981
+Icon: Users
+
+Card 3 - Abnormal Rate:
+
+Label: "Abnormal Rate"
+Value: "23%"
+Trend: "⚠ Within normal range" (cam - không có arrow)
+
+Icon: Alert triangle
+Color: #F59E0B
+
+
+Icon background: rgba(245, 158, 11, 0.1)
+Icon color: #F59E0B
+Icon: Chart pie
+
+Card 4 - System Uptime:
+
+Label: "System Uptime"
+Value: "99.98%"
+Trend: "✓ Excellent performance" (xanh lá - icon checkmark)
+
+Color: #10B981
+
+
+Icon background: rgba(16, 185, 129, 0.1)
+Icon color: #10B981
+Icon: Server
+
+2. CHARTS SECTION:
+
+Display: Grid
+Grid-template-columns: 1.5fr 1fr (60:40 ratio)
+Gap: 24px
+Margin-bottom: 32px
+
+Chart Box - Daily Scan Trend (Bên trái):
+Container:
+
+Background: #FFFFFF
+Border-radius: 12px
+Padding: 28px
+Box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08)
+Border: 1px solid #E2E8F0
+
+Header:
+
+Display: Flex
+Justify-content: Space-between
+Align-items: Center
+Margin-bottom: 24px
+Title "Daily Scan Trend":
+
+Font-size: 18px
+Font-weight: 700
+Color: #1E293B
+
+
+Dropdown "Last 7 days":
+
+Padding: 8px 12px
+Background: #F8FAFC
+Border: 1px solid #E2E8F0
+Border-radius: 6px
+Font-size: 13px
+Color: #475569
+Cursor: Pointer
+Icon chevron-down: Right side
+
+
+
+Chart Area:
+
+Height: 300px
+Canvas hoặc SVG
+(Biểu đồ đường/cột thực tế sẽ render bằng Chart.js hoặc Recharts)
+
+Chart Box - Usage by Department (Bên phải):
+Container:
+
+Cấu trúc giống Daily Scan Trend
+Padding: 28px
+
+Header:
+
+Title: "Usage by Department"
+Dropdown: "This month"
+
+Chart Area:
+
+Height: 300px
+(Biểu đồ tròn, bar hoặc chart khác)
+
+3. RECENT SYSTEM ALERTS SECTION:
+Container:
+
+Background: #FFFFFF
+Border-radius: 12px
+Padding: 28px
+Box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08)
+Border: 1px solid #E2E8F0
+
+Header:
+
+Display: Flex
+Justify-content: Space-between
+Align-items: Center
+Margin-bottom: 20px
+Title "Recent System Alerts":
+
+Font-size: 18px
+Font-weight: 700
+Color: #1E293B
+
+
+Link "View All":
+
+Font-size: 14px
+Color: #3B82F6
+Font-weight: 600
+Text-decoration: None
+Hover: Underline
+
+
+
+Alert Items:
+Alert 1 - AI Processing Timeout (Critical):
+Container:
+
+Padding: 16px
+Background: #FEF2F2 (đỏ nhạt)
+Border-left: 4px solid #EF4444
+Border-radius: 8px
+Margin-bottom: 12px
+
+Layout:
+
+Display: Flex
+Gap: 14px
+Icon area:
+
+Width: 40px
+Height: 40px
+Background: #FEE2E2
+Border-radius: 8px
+Display: Flex
+Align-items: Center
+Justify-content: Center
+Flex-shrink: 0
+Icon alert-circle:
+
+Size: 20px
+Color: #EF4444
+
+
+
+
+Content area (Flex: 1):
+
+Title "AI Processing Timeout":
+
+Font-size: 14px
+Font-weight: 600
+Color: #991B1B (đỏ đậm)
+Margin-bottom: 4px
+
+
+Description "Model response time exceeded 30 seconds for chest X-ray analysis":
+
+Font-size: 13px
+Color: #B91C1C
+Line-height: 1.4
+Margin-bottom: 6px
+
+
+Timestamp "2 minutes ago":
+
+Font-size: 11px
+Color: #DC2626
+Font-weight: 500
+
+
+
+
+
+Alert 2 - High System Load (Warning):
+Container:
+
+Padding: 16px
+Background: #FFFBEB (vàng nhạt)
+Border-left: 4px solid #F59E0B
+Border-radius: 8px
+Margin-bottom: 12px
+
+Cấu trúc giống Alert 1, khác:
+
+Icon background: #FEF3C7
+Icon color: #F59E0B
+Icon: Alert triangle
+Title color: #92400E (nâu đậm)
+Description color: #B45309
+Timestamp color: #D97706
+Content: "High System Load" / "CPU usage reached 85% during peak hours" / "15 minutes ago"
+
+Alert 3 - Model Update Available (Info):
+Container:
+
+Padding: 16px
+Background: #EFF6FF (xanh nhạt)
+Border-left: 4px solid #3B82F6
+Border-radius: 8px
+
+Cấu trúc giống Alert 1, khác:
+
+Icon background: #DBEAFE
+Icon color: #3B82F6
+Icon: Info circle
+Title color: #1E40AF (xanh đậm)
+Description color: #1D4ED8
+Timestamp color: #2563EB
+Content: "Model Update Available" / "New AI model version 2.1.3 is ready for deployment" / "1 hour ago"
+
+3.4. ACTIVITY LOGS PAGE
+VỊ TRÍ & BỐ CỤC:
+
+Margin-left: 260px
+Padding: 32px
+Background: #F8FAFC
+
+PAGE STRUCTURE:
+1. FILTERS SECTION:
+Container:
+
+Background: #FFFFFF
+Border-radius: 12px
+Padding: 24px
+Box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08)
+Border: 1px solid #E2E8F0
+Margin-bottom: 24px
+
+Header:
+
+Display: Flex
+Justify-content: Space-between
+Align-items: Center
+Margin-bottom: 20px
+Title "Filters":
+
+Font-size: 16px
+Font-weight: 600
+Color: #1E293B
+
+
+Link "Reset filters":
+
+Display: Flex
+Align-items: Center
+Gap: 6px
+Font-size: 13px
+Color: #3B82F6
+Font-weight: 600
+Text-decoration: None
+Cursor: Pointer
+Icon refresh:
+
+Size: 14px
+Color: #3B82F6
+
+
+Hover:
+
+Text-decoration: Underline
+
+
+
+
+
+Filters Grid:
+
+Display: Grid
+Grid-template-columns: 1fr 1fr 1fr 1fr (4 cột đều nhau)
+Gap: 16px
+Margin-bottom: 20px
+
+Filter 1 - Date Range:
+Label:
+
+Font-size: 13px
+Font-weight: 600
+Color: #334155
+Margin-bottom: 8px
+Display: Block
+
+Input Group (2 inputs ngang):
+
+Display: Flex
+Gap: 12px
+Input "From" (2025-07-25):
+
+Width: 50%
+Height: 40px
+Padding: 10px 12px
+Background: #FFFFFF
+Border: 1.5px solid #E2E8F0
+Border-radius: 8px
+Font-size: 14px
+Color: #1E293B
+Type: Date
+Icon calendar: Right side (browser default)
+
+
+Input "To" (2025-07-29):
+
+Cấu trúc giống "From"
+
+
+
+Filter 2 - Action Type:
+Label:
+
+Text: "Action Type"
+Cấu trúc giống Date Range label
+
+Dropdown:
+
+Width: 100%
+Height: 40px
+Padding: 10px 36px 10px 12px
+Background: #FFFFFF
+Border: 1.5px solid #E2E8F0
+Border-radius: 8px
+Font-size: 14px
+Color: #1E293B
+Cursor: Pointer
+Position: Relative
+Selected value: "All actions"
+Icon chevron-down:
+
+Position: Absolute right
+Right: 12px
+Top: 50% (transform: translateY(-50%))
+Size: 16px
+Color: #64748B
+Pointer-events: None
+
+
+
+Filter 3 - User:
+Label:
+
+Text: "User"
+
+Search Input:
+
+Width: 100%
+Height: 40px
+Padding: 10px 12px 10px 38px
+Background: #FFFFFF
+Border: 1.5px solid #E2E8F0
+Border-radius: 8px
+Font-size: 14px
+Color: #1E293B
+Icon search:
+
+Position: Absolute left
+Left: 12px
+Top: 50%
+Size: 16px
+Color: #94A3B8
+
+
+Placeholder: "Search by username"
+Placeholder color: #CBD5E1
+
+Button "Apply Filters":
+
+Grid-column: 4 (cột thứ 4)
+Align-self: End (căn bottom)
+Height: 40px
+Padding: 0 24px
+Background: Linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)
+Border: None
+Border-radius: 8px
+Color: #FFFFFF
+Font-size: 14px
+Font-weight: 600
+Cursor: Pointer
+Transition: all 0.3s ease
+Box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3)
+Hover:
+
+Transform: translateY(-2px)
+Box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4)
+
+
+
+2. ACTIVITY LOGS TABLE:
+Container:
+
+Background: #FFFFFF
+Border-radius: 12px
+Padding: 0
+Box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08)
+Border: 1px solid #E2E8F0
+Overflow: Hidden
+
+Table Header:
+
+Display: Flex
+Justify-content: Space-between
+Align-items: Center
+Padding: 20px 24px
+Border-bottom: 1px solid #E2E8F0
+Title "Activity Logs":
+
+Font-size: 18px
+Font-weight: 700
+Color: #1E293B
+
+
+Info text:
+
+Display: Flex
+Align-items: Center
+Gap: 8px
+Icon download:
+
+Size: 16px
+Color: #64748B
+Cursor: Pointer
+Hover: Color #3B82F6
+
+
+Text "Showing 50 of 1,247 logs":
+
+Font-size: 13px
+Color: #64748B
+Font-weight: 500
+
+
+
+
+
+Table:
+
+Width: 100%
+Border-collapse: Separate
+Border-spacing: 0
+
+Table Header Row:
+
+Background: #F8FAFC
+Border-bottom: 1px solid #E2E8F0
+
+Header Cells:
+
+Padding: 14px 24px
+Text-align: Left
+Font-size: 12px
+Font-weight: 700
+Color: #475569
+Text-transform: Uppercase
+Letter-spacing: 0.5px
+
+Columns (từ trái sang phải):
+
+Timestamp (Width: 15%)
+
+Text: "Timestamp"
+Icon sort (up/down arrows):
+
+Size: 12px
+Color: #94A3B8
+Margin-left: 6px
+Cursor: Pointer
+
+
+
+
+User (Width: 20%)
+
+Text: "User"
+
+
+Action (Width: 15%)
+
+Text: "Action"
+
+
+Description (Width: 35%)
+
+Text: "Description"
+
+
+IP Address (Width: 15%)
+
+Text: "IP Address"
+
+
+
+Table Body Rows:
+Row structure (mỗi row):
+
+Padding: 16px 24px
+Border-bottom: 1px solid #F1F5F9
+Transition: Background 0.2s ease
+Hover:
+
+Background: #F8FAFC
+Cursor: Default
+
+
+
+Row 1 - Dr. Linh uploaded scan:
+Cell 1 - Timestamp:
+
+Text: "2025-07-28 14:03"
+Font-size: 13px
+Color: #475569
+Font-weight: 500
+Font-variant-numeric: Tabular-nums (để align số)
+
+Cell 2 - User:
+
+Display: Flex
+Align-items: Center
+Gap: 12px
+Avatar:
+
+Width: 32px
+Height: 32px
+Border-radius: 50%
+Object-fit: Cover
+Border: 1.5px solid #E2E8F0
+
+
+Name "Dr. Linh":
+
+Font-size: 14px
+Color: #1E293B
+Font-weight: 600
+
+
+
+Cell 3 - Action:
+
+Badge "Uploaded scan":
+
+Display: Inline-block
+Padding: 6px 12px
+Background: rgba(59, 130, 246, 0.1)
+Color: #3B82F6
+Border-radius: 6px
+Font-size: 12px
+Font-weight: 600
+Letter-spacing: 0.3px
+
+
+
+Cell 4 - Description:
+
+Text: "CT Scan ID: #8323"
+Font-size: 13px
+Color: #64748B
+Line-height: 1.4
+
+Cell 5 - IP Address:
+
+Text: "192.168.1.25"
+Font-size: 13px
+Color: #475569
+Font-family: Monospace (để align số)
+Font-weight: 500
+
+Row 2 - Dr. Martinez result generated:
+Khác biệt:
+
+Timestamp: "2025-07-28 13:47"
+User: Dr. Martinez (avatar khác)
+Action badge:
+
+Text: "Result generated"
+Background: rgba(16, 185, 129, 0.1)
+Color: #10B981
+
+
+Description: "MRI Analysis ID: #8322"
+IP: "192.168.1.42"
+
+Row 3 - System Admin user created:
+Khác biệt:
+
+Timestamp: "2025-07-28 12:15"
+User: System Admin
+Action badge:
+
+Text: "User created"
+Background: rgba(139, 92, 246, 0.1)
+Color: #8B5CF6
+
+
+Description: "Created user account for Dr. Wong"
+IP: "192.168.1.1"
+
+Row 4 - Dr. Chen login:
+Khác biệt:
+
+Timestamp: "2025-07-28 11:32"
+User: Dr. Chen
+Action badge:
+
+Text: "Login"
+Background: rgba(245, 158, 11, 0.1)
+Color: #F59E0B
+
+
+Description: "Successful login"
+IP: "192.168.1.37"
+
+Row 5 - Dr. Johnson error:
+Khác biệt:
+
+Timestamp: "2025-07-28 10:47"
+User: Dr. Johnson
+Action badge:
+
+Text: "Error"
+Background: rgba(239, 68, 68, 0.1)
+Color: #EF4444
+
+
+Description: "Failed to process X-ray (ID: #8321)"
+IP: "192.168.1.138"
+
+Row 6 - Dr. Smith uploaded scan:
+Khác biệt:
+
+Timestamp: "2025-07-28 09:55"
+User: Dr. Smith
+Action: "Uploaded scan" (xanh)
+Description: "Ultrasound ID: #8320"
+IP: "192.168.1.22"
+
+3. PAGINATION FOOTER:
+Container:
+
+Padding: 16px 24px
+Border-top: 1px solid #E2E8F0
+Background: #FAFBFC
+Display: Flex
+Justify-content: Space-between
+Align-items: Center
+
+Left side - Rows per page:
+
+Display: Flex
+Align-items: Center
+Gap: 10px
+Text "Rows per page:":
+
+Font-size: 13px
+Color: #64748B
+Font-weight: 500
+
+
+Dropdown "10":
+
+Padding: 6px 30px 6px 10px
+Background: #FFFFFF
+Border: 1px solid #E2E8F0
+Border-radius: 6px
+Font-size: 13px
+Color: #1E293B
+Cursor: Pointer
+Position: Relative
+Icon chevron-down:
+
+Position: Absolute right
+Right: 8px
+Size: 14px
+Color: #64748B
+
+
+
+
+
+Right side - Page info:
+
+Display: Flex
+Align-items: Center
+Gap: 16px
+Text "1-50 of 1,247":
+
+Font-size: 13px
+Color: #64748B
+Font-weight: 500
+
+
+Navigation buttons:
+
+Display: Flex
+Gap: 8px
+Button "Previous":
+
+Padding: 8px 14px
+Background: #FFFFFF
+Border: 1px solid #E2E8F0
+Border-radius: 6px
+Font-size: 13px
+Color: #64748B
+Font-weight: 500
+Cursor: Not-allowed (disabled state)
+Opacity: 0.5
+
+
+Button "Next":
+
+Same structure
+Cursor: Pointer (enabled)
+Opacity: 1
+Hover:
+
+Background: #F8FAFC
+Border-color: #CBD5E1
+
+
+
+
+
+
+
+3.5. USER MANAGEMENT PAGE
+VỊ TRÍ & BỐ CỤC:
+
+Margin-left: 260px
+Padding: 32px
+Background: #F8FAFC
+
+PAGE STRUCTURE:
+1. PAGE HEADER:
+Container:
+
+Background: #FFFFFF
+Border-radius: 12px
+Padding: 24px
+Box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08)
+Border: 1px solid #E2E8F0
+Margin-bottom: 24px
+Display: Flex
+Justify-content: Space-between
+Align-items: Center
+
+Left side - Title & Filters:
+
+Display: Flex
+Align-items: Center
+Gap: 16px
+Title "User Management":
+
+Font-size: 24px
+Font-weight: 700
+Color: #1E293B
+Margin-right: 24px
+
+
+Dropdown "All Roles":
+
+Padding: 8px 32px 8px 12px
+Background: #F8FAFC
+Border: 1.5px solid #E2E8F0
+Border-radius: 8px
+Font-size: 14px
+Color: #475569
+Font-weight: 500
+Cursor: Pointer
+Position: Relative
+Icon chevron-down:
+
+Position: Absolute right
+Right: 10px
+Size: 14px
+Color: #64748B
+
+
+
+
+Status Filters:
+
+Display: Flex
+Gap: 16px
+Margin-left: 20px
+Label "Status:":
+
+Font-size: 13px
+Color: #64748B
+Font-weight: 600
+Margin-right: 4px
+
+
+Radio "All Active":
+
+Display: Flex
+Align-items: Center
+Gap: 6px
+Cursor: Pointer
+Radio button:
+
+Width: 16px
+Height: 16px
+Border: 2px solid #3B82F6
+Border-radius: 50%
+Background: #3B82F6 (checked)
+Inner dot: White, 6px
+
+
+Label text:
+
+Font-size: 13px
+Color: #475569
+Font-weight: 500
+
+
+
+
+Radio "Suspended":
+
+Cấu trúc giống "All Active"
+Border: 2px solid #CBD5E1 (unchecked)
+Background: Transparent
+
+
+
+
+
+Right side - Add button:
+
+Button "+ Add New Doctor":
+
+Padding: 10px 20px
+Background: Linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)
+Border: None
+Border-radius: 8px
+Color: #FFFFFF
+Font-size: 14px
+Font-weight: 600
+Cursor: Pointer
+Display: Flex
+Align-items: Center
+Gap: 8px
+Box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3)
+Transition: all 0.3s ease
+Icon plus:
+
+Size: 16px
+Color: #FFFFFF
+
+
+Hover:
+
+Transform: translateY(-2px)
+Box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4)
+
+
+
+
+
+2. USER TABLE:
+Container:
+
+Background: #FFFFFF
+Border-radius: 12px
+Box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08)
+Border: 1px solid #E2E8F0
+Overflow: Hidden
+
+Table:
+
+Width: 100%
+Border-collapse: Separate
+
+Table Header Row:
+
+Background: #F8FAFC
+Border-bottom: 1px solid #E2E8F0
+Padding: 14px 24px
+
+Header Cells:
+
+Text-align: Left
+Font-size: 12px
+Font-weight: 700
+Color: #475569
+Text-transform: Uppercase
+Letter-spacing: 0.5px
+Padding: 14px 20px
+
+Columns (từ trái sang phải):
+
+Doctor ID (Width: 12%)
+Full Name (Width: 25%)
+Email (Width: 28%)
+Role (Width: 15%)
+Status (Width: 10%)
+Actions (Width: 10%)
+
+Table Body Rows:
+Row structure:
+
+Padding: 18px 20px
+Border-bottom: 1px solid #F1F5F9
+Transition: Background 0.2s ease
+Hover:
+
+Background: #FAFBFC
+
+
+
+Row 1 - Dr. John Smith (Active):
+Cell 1 - Doctor ID:
+
+Text: "DR-2024-001"
+Font-size: 13px
+Color: #64748B
+Font-weight: 600
+Font-family: Monospace
+
+Cell 2 - Full Name:
+
+Display: Flex
+Align-items: Center
+Gap: 12px
+Avatar:
+
+Width: 36px
+Height: 36px
+Border-radius: 50%
+Object-fit: Cover
+Border: 2px solid #E2E8F0
+
+
+Name "Dr. John Smith":
+
+Font-size: 14px
+Color: #1E293B
+Font-weight: 600
+
+
+
+Cell 3 - Email:
+
+Text: "john.smith@mediai.com"
+Font-size: 13px
+Color: #64748B
+Font-weight: 500
+
+Cell 4 - Role:
+
+Text: "Radiologist"
+Font-size: 13px
+Color: #475569
+Font-weight: 500
+
+Cell 5 - Status:
+
+Badge "Active":
+
+Display: Inline-block
+Padding: 6px 12px
+Background: rgba(16, 185, 129, 0.1)
+Color: #10B981
+Border-radius: 6px
+Font-size: 12px
+Font-weight: 700
+Letter-spacing: 0.3px
+
+
+
+Cell 6 - Actions:
+
+Display: Flex
+Gap: 8px
+Align-items: Center
+Icon buttons (4 icons):
+
+View (eye icon):
+
+Width: 32px
+Height: 32px
+Background: Transparent
+Border: None
+Border-radius: 6px
+Display: Flex
+Align-items: Center
+Justify-content: Center
+Cursor: Pointer
+Transition: Background 0.2s
+Icon:
+
+Size: 16px
+Color: #3B82F6
+
+
+Hover:
+
+Background: rgba(59, 130, 246, 0.1)
+
+
+
+
+Edit (pencil icon):
+
+Cấu trúc giống View
+Icon color: #F59E0B (cam)
+Hover background: rgba(245, 158, 11, 0.1)
+
+
+Notification (bell icon):
+
+Icon color: #8B5CF6 (tím)
+Hover background: rgba(139, 92, 246, 0.1)
+
+
+Delete (trash icon):
+
+Icon color: #EF4444 (đỏ)
+Hover background: rgba(239, 68, 68, 0.1)
+
+
+
+
+
+Row 2 - Dr. Sarah Johnson (Active):
+Khác biệt:
+
+Doctor ID: "DR-2024-002"
+Avatar: Khác
+Name: "Dr. Sarah Johnson"
+Email: "sarah.johnson@mediai.com"
+Role: "Pulmonologist"
+Status: "Active" (xanh lá)
+
+Row 3 - Dr. Michael Chen (Suspended):
+Khác biệt:
+
+Doctor ID: "DR-2024-003"
+Name: "Dr. Michael Chen"
+Email: "michael.chen@mediai.com"
+Role: "Cardiologist"
+Status badge "Suspended":
+
+Background: rgba(239, 68, 68, 0.1)
+Color: #EF4444
+Font-weight: 700
+
+
+Entire row có slight opacity: 0.7
+
+Row 4 - Dr. Emily Rodriguez (Active):
+Khác biệt:
+
+Doctor ID: "DR-2024-004"
+Name: "Dr. Emily Rodriguez"
+Email: "emily.rodriguez@mediai.com"
+Role: "Neurologist"
+
+Row 5 - Dr. James Wilson (Active):
+Khác biệt:
+
+Doctor ID: "DR-2024-005"
+Name: "Dr. James Wilson"
+Email: "james.wilson@mediai.com"
+Role: "Radiologist"
+
+3. PAGINATION FOOTER:
+Container:
+
+Padding: 16px 24px
+Border-top: 1px solid #E2E8F0
+Background: #FAFBFC
+Display: Flex
+Justify-content: Space-between
+Align-items: Center
+
+Left side:
+
+Text "Showing 1 to 5 of 25 results":
+
+Font-size: 13px
+Color: #64748B
+Font-weight: 500
+
+
+
+Right side - Navigation:
+
+Display: Flex
+Gap: 8px
+Button "Previous":
+
+Padding: 8px 14px
+Background: #FFFFFF
+Border: 1px solid #E2E8F0
+Border-radius: 6px
+Font-size: 13px
+Color: #64748B
+Cursor: Not-allowed
+Opacity: 0.5
+
+
+Button "Next":
+
+Same structure
+Cursor: Pointer
+Opacity: 1
+Hover:
+
+Background: #F8FAFC
+Border-color: #3B82F6
+Color: #3B82F6
+
+
+
+
+
+3.6. SYSTEM SETTINGS PAGE
+VỊ TRÍ & BỐ CỤC:
+
+Margin-left: 260px
+Padding: 32px
+Background: #F8FAFC
+
+PAGE STRUCTURE (Grid Layout 2 cột):
+
+Display: Grid
+Grid-template-columns: 1fr 1fr
+Gap: 24px
+
+
+COLUMN 1 (Bên trái):
+1. AI MODEL VERSION CARD:
+Container:
+
+Background: #FFFFFF
+Border-radius: 12px
+Padding: 28px
+Box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08)
+Border: 1px solid #E2E8F0
+Margin-bottom: 24px
+
+Header:
+
+Display: Flex
+Justify-content: Space-between
+Align-items: Center
+Margin-bottom: 20px
+Title "AI Model Version":
+
+Font-size: 18px
+Font-weight: 700
+Color: #1E293B
+
+
+Badge "Active":
+
+Padding: 6px 12px
+Background: rgba(59, 130, 246, 0.1)
+Color: #3B82F6
+Border-radius: 6px
+Font-size: 12px
+Font-weight: 700
+Letter-spacing: 0.3px
+
+
+
+Current Version Section:
+
+Margin-bottom: 12px
+Label "Current Version":
+
+Font-size: 13px
+Color: #64748B
+Font-weight: 600
+Margin-bottom: 8px
+
+
+Dropdown "v1.2.3 (Stable)":
+
+Width: 100%
+Height: 44px
+Padding: 10px 36px 10px 14px
+Background: #F8FAFC
+Border: 1.5px solid #E2E8F0
+Border-radius: 8px
+Font-size: 14px
+Color: #1E293B
+Font-weight: 600
+Cursor: Pointer
+Position: Relative
+Icon chevron-down:
+
+Position: Absolute right
+Right: 12px
+Size: 16px
+Color: #64748B
+
+
+
+
+
+Last Updated:
+
+Font-size: 12px
+Color: #94A3B8
+Margin-bottom: 20px
+Text: "Last updated: July 28, 2023 at 10:45 AM"
+
+Model Performance Section:
+
+Padding-top: 20px
+Border-top: 1px solid #F1F5F9
+Heading "Model Performance":
+
+Font-size: 14px
+Font-weight: 600
+Color: #475569
+Margin-bottom: 16px
+
+
+Metrics (2 cột):
+
+Display: Grid
+Grid-template-columns: 1fr 1fr
+Gap: 16px
+
+Metric 1 - Accuracy:
+
+Label "Accuracy":
+
+Font-size: 12px
+Color: #64748B
+Margin-bottom: 6px
+
+
+Value "94.3%":
+
+Font-size: 24px
+Font-weight: 700
+Color: #10B981 (xanh lá)
+
+
+
+Metric 2 - Avg. Response Time:
+
+Label "Avg. Response Time":
+
+Font-size: 12px
+Color: #64748B
+Margin-bottom: 6px
+
+
+Value "1.2s":
+
+Font-size: 24px
+Font-weight: 700
+Color: #3B82F6 (xanh dương)
+
+
+
+
+
+2. SYSTEM CONFIGURATION CARD:
+Container:
+
+Background: #FFFFFF
+Border-radius: 12px
+Padding: 28px
+Box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08)
+Border: 1px solid #E2E8F0
+Margin-bottom: 24px
+
+Title:
+
+Font-size: 18px
+Font-weight: 700
+Color: #1E293B
+Margin-bottom: 24px
+
+Configuration Items (4 items):
+Item 1 - Enable Email Alerts (ON):
+Container:
+
+Display: Flex
+Justify-content: Space-between
+Align-items: Center
+Padding-bottom: 20px
+Border-bottom: 1px solid #F1F5F9
+Margin-bottom: 20px
+
+Left side - Info:
+
+Flex: 1
+Title "Enable Email Alerts":
+
+Font-size: 14px
+Font-weight: 600
+Color: #1E293B
+Margin-bottom: 4px
+
+
+Description "Send email notifications for critical system events":
+
+Font-size: 13px
+Color: #64748B
+Line-height: 1.4
+
+
+
+Right side - Toggle:
+
+Width: 48px
+Height: 26px
+Background: #3B82F6 (ON state)
+Border-radius: 13px
+Position: Relative
+Cursor: Pointer
+Transition: Background 0.3s ease
+Toggle circle:
+
+Width: 20px
+Height: 20px
+Background: #FFFFFF
+Border-radius: 50%
+Position: Absolute
+Top: 3px
+Right: 3px (ON position)
+Box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2)
+Transition: all 0.3s ease
+
+
+
+Item 2 - Data Anonymization (ON):
+
+Cấu trúc giống Item 1
+Title: "Data Anonymization"
+Description: "Automatically anonymize patient data for analysis"
+Toggle: ON (xanh #3B82F6)
+
+Item 3 - Automatic Updates (OFF):
+
+Cấu trúc giống Item 1
+Title: "Automatic Updates"
+Description: "Allow system to automatically update when new versions are available"
+Toggle: OFF
+
+Background: #CBD5E1 (xám)
+Circle position: Left 3px
+
+
+
+Item 4 - Diagnostic Logging (OFF):
+
+Cấu trúc giống Item 3
+Title: "Diagnostic Logging"
+Description: "Enable detailed diagnostic logging for troubleshooting"
+Toggle: OFF
+
+3. PERMISSIONS MATRIX CARD:
+Container:
+
+Background: #FFFFFF
+Border-radius: 12px
+Padding: 28px
+Box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08)
+Border: 1px solid #E2E8F0
+
+Header:
+
+Display: Flex
+Justify-content: Space-between
+Align-items: Center
+Margin-bottom: 24px
+Title "Permissions Matrix":
+
+Font-size: 18px
+Font-weight: 700
+Color: #1E293B
+
+
+Button "+ Add Role":
+
+Padding: 8px 16px
+Background: Transparent
+Border: 1.5px solid #3B82F6
+Border-radius: 8px
+Color: #3B82F6
+Font-size: 13px
+Font-weight: 600
+Cursor: Pointer
+Transition: all 0.2s
+Hover:
+
+Background: rgba(59, 130, 246, 0.05)
+
+
+
+
+
+Table:
+
+Width: 100%
+Border-collapse: Separate
+Border-spacing: 0
+
+Table Header:
+
+Background: #F8FAFC
+Cell "Features / Roles":
+
+Padding: 12px 16px
+Font-size: 12px
+Font-weight: 700
+Color: #475569
+Text-transform: Uppercase
+Letter-spacing: 0.5px
+Text-align: Left
+
+
+Role columns (Admin, Doctor, Nurse, Technician, Guest):
+
+Same style
+Text-align: Center
+Width: ~12% each
+
+
+
+Table Body Rows:
+Row structure:
+
+Border-bottom: 1px solid #F1F5F9
+Padding: 14px 16px
+Transition: Background 0.2s
+Hover:
+
+Background: #FAFBFC
+
+
+
+Row 1 - View Diagnoses:
+Feature name cell:
+
+Text: "View Diagnoses"
+Font-size: 13px
+Color: #475569
+Font-weight: 500
+Padding-left: 16px
+
+Permission cells (5 cột):
+
+Text-align: Center
+Padding: 14px 8px
+Checkbox (khi có quyền):
+
+Width: 20px
+Height: 20px
+Background: #3B82F6
+Border: None
+Border-radius: 4px
+Display: Inline-flex
+Align-items: Center
+Justify-content: Center
+Cursor: Pointer
+Icon checkmark:
+
+Color: #FFFFFF
+Size: 12px
+Stroke-width: 2.5
+
+
+
+
+Empty (khi không có quyền):
+
+Width: 20px
+Height: 20px
+Background: Transparent
+Border: 2px solid #E2E8F0
+Border-radius: 4px
+Cursor: Pointer
+Hover:
+
+Border-color: #3B82F6
+
+
+
+
+
+Quyền cho View Diagnoses:
+
+Admin: ✓ (checked)
+Doctor: ✓ (checked)
+Nurse: ✓ (checked)
+Technician: ✗ (unchecked)
+Guest: ✗ (unchecked)
+
+Row 2 - Edit Diagnoses:
+
+Feature: "Edit Diagnoses"
+Admin: ✓
+Doctor: ✓
+Nurse: ✗
+Technician: ✗
+Guest: ✗
+
+Row 3 - Manage Users:
+
+Feature: "Manage Users"
+Admin: ✓
+Doctor: ✗
+Nurse: ✗
+Technician: ✗
+Guest: ✗
+
+Row 4 - Configure System:
+
+Feature: "Configure System"
+Admin: ✓
+Doctor: ✗
+Nurse: ✗
+Technician: ✗
+Guest: ✗
+
+Row 5 - View Logs:
+
+Feature: "View Logs"
+Admin: ✓
+Doctor: ✓
+Nurse: ✓
+Technician: ✓
+Guest: ✗
+
+Row 6 - Run Backups:
+
+Feature: "Run Backups"
+Admin: ✓
+Doctor: ✗
+Nurse: ✗
+Technician: ✗
+Guest: ✗
+
+Save Button (Footer):
+
+Position: Bottom right của card
+Margin-top: 24px
+Padding: 10px 24px
+Background: Linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)
+Border: None
+Border-radius: 8px
+Color: #FFFFFF
+Font-size: 14px
+Font-weight: 600
+Cursor: Pointer
+Box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3)
+Hover:
+
+Transform: translateY(-2px)
+Box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4)
+
+
+
+
+COLUMN 2 (Bên phải):
+1. STORAGE USAGE CARD:
+Container:
+
+Background: #FFFFFF
+Border-radius: 12px
+Padding: 28px
+Box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08)
+Border: 1px solid #E2E8F0
+Margin-bottom: 24px
+
+Title:
+
+Font-size: 18px
+Font-weight: 700
+Color: #1E293B
+Margin-bottom: 20px
+
+Usage Summary:
+
+Display: Flex
+Justify-content: Space-between
+Align-items: Center
+Margin-bottom: 12px
+Text "78% used":
+
+Font-size: 15px
+Color: #64748B
+Font-weight: 600
+
+
+Text "720GB / 1TB":
+
+Font-size: 15px
+Color: #1E293B
+Font-weight: 700
+
+
+
+Progress Bar:
+
+Width: 100%
+Height: 10px
+Background: #E2E8F0
+Border-radius: 5px
+Overflow: Hidden
+Margin-bottom: 24px
+Fill:
+
+Width: 78%
+Height: 100%
+Background: Linear-gradient(90deg, #3B82F6 0%, #60A5FA 100%)
+Border-radius: 5px
+Transition: Width 0.5s ease
+
+
+
+Storage Breakdown:
+
+List of 3 items
+Each item:
+
+Display: Flex
+Justify-content: Space-between
+Align-items: Center
+Padding: 12px 0
+Border-bottom: 1px solid #F1F5F9 (except last)
+
+Item 1 - Patient Data:
+
+Left side:
+
+Icon: Folder (size 18px, color #3B82F6)
+Text "Patient Data":
+
+Font-size: 14px
+Color: #475569
+Font-weight: 500
+Margin-left: 12px
+
+
+
+
+Right side:
+
+Text "450GB":
+
+Font-size: 14px
+Color: #1E293B
+Font-weight: 700
+
+
+
+
+
+Item 2 - AI Models:
+
+Icon: Brain/CPU (color #8B5CF6 tím)
+Text: "AI Models"
+Value: "220GB"
+
+Item 3 - System Logs:
+
+Icon: File text (color #F59E0B cam)
+Text: "System Logs"
+Value: "110GB"
+
+
+
+Manage Storage Button:
+
+Width: 100%
+Height: 44px
+Background: #FFFFFF
+Border: 1.5px solid #3B82F6
+Border-radius: 8px
+Color: #3B82F6
+Font-size: 14px
+Font-weight: 600
+Cursor: Pointer
+Display: Flex
+Align-items: Center
+Justify-content: Center
+Gap: 8px
+Margin-top: 20px
+Transition: all 0.3s ease
+Icon: Folder open
+
+Size: 16px
+
+
+Hover:
+
+Background: rgba(59, 130, 246, 0.05)
+Transform: translateY(-2px)
+
+
+
+2. SYSTEM BACKUP CARD:
+Container:
+
+Background: #FFFFFF
+Border-radius: 12px
+Padding: 28px
+Box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08)
+Border: 1px solid #E2E8F0
+
+Title:
+
+Font-size: 18px
+Font-weight: 700
+Color: #1E293B
+Margin-bottom: 20px
+
+Last Backup Section:
+
+Margin-bottom: 24px
+Label "Last Backup":
+
+Font-size: 13px
+Color: #64748B
+Font-weight: 600
+Margin-bottom: 12px
+
+
+Status Card:
+
+Padding: 16px
+Background: rgba(16, 185, 129, 0.05)
+Border: 1px solid rgba(16, 185, 129, 0.2)
+Border-radius: 8px
+Status row:
+
+Display: Flex
+Align-items: Center
+Gap: 8px
+Margin-bottom: 8px
+Icon check-circle:
+
+Size: 18px
+Color: #10B981
+
+
+Text "Successful":
+
+Font-size: 14px
+Color: #10B981
+Font-weight: 700
+
+
+
+
+DateTime:
+
+Font-size: 13px
+Color: #64748B
+Margin-bottom: 4px
+Text: "July 29, 2023 at 03:45 AM"
+
+
+Size:
+
+Font-size: 12px
+Color: #94A3B8
+Text: "Backup size: 42.3 GB"
+
+
+
+
+
+Backup Schedule Section:
+
+Margin-bottom: 24px
+Label "Backup Schedule":
+
+Font-size: 13px
+Color: #64748B
+Font-weight: 600
+Margin-bottom: 12px
+
+
+Radio options (3 options):
+
+Display: Flex
+Flex-direction: Column
+Gap: 12px
+
+Radio 1 - Daily (Selected):
+
+Display: Flex
+Align-items: Center
+Gap: 10px
+Cursor: Pointer
+Radio button:
+
+Width: 18px
+Height: 18px
+Border: 2px solid #3B82F6
+Border-radius: 50%
+Background: #3B82F6 (selected)
+Display: Flex
+Align-items: Center
+Justify-content: Center
+Inner dot:
+
+Width: 8px
+Height: 8px
+Background: #FFFFFF
+Border-radius: 50%
+
+
+
+
+Label "Daily":
+
+Font-size: 14px
+Color: #1E293B
+Font-weight: 500
+
+
+
+Radio 2 - Weekly (Unselected):
+
+Radio button:
+
+Border: 2px solid #CBD5E1
+Background: Transparent
+No inner dot
+
+
+Label "Weekly":
+
+Color: #64748B
+
+
+
+Radio 3 - Monthly (Unselected):
+
+Same as Weekly
+Label: "Monthly"
+
+
+
+Run Backup Button:
+
+Width: 100%
+Height: 48px
+Background: Linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)
+Border: None
+Border-radius: 8px
+Color: #FFFFFF
+Font-size: 14px
+Font-weight: 600
+Cursor: Pointer
+Display: Flex
+Align-items: Center
+Justify-content: Center
+Gap: 10px
+Box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3)
+Transition: all 0.3s ease
+Icon cloud-upload:
+
+Size: 18px
+Color: #FFFFFF
+
+
+Text "Run Backup Now"
+Hover:
+
+Transform: translateY(-2px)
+Box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4)
+
+
+
+
+4. GIAO DIỆN DOCTOR (BÁC SĨ)
+4.1. SIDEBAR DOCTOR
+VỊ TRÍ & KÍCH THƯỚC:
+
+Position: Fixed left
+Width: 240px
+Height: 100vh
+Z-index: 1000
+Background: #FFFFFF
+Border-right: 1px solid #E2E8F0
+Box-shadow: 2px 0 12px rgba(0, 0, 0, 0.04)
+
+CẤU TRÚC:
+1. HEADER SECTION:
+
+Padding: 24px 20px
+Border-bottom: 1px solid #F1F5F9
+
+a) Logo & Brand:
+
+Display: Flex
+Align-items: Center
+Gap: 12px
+Margin-bottom: 20px
+Icon phổi:
+
+Width: 36px
+Height: 36px
+Background: Linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%)
+Border-radius: 10px
+Display: Flex
+Align-items: Center
+Justify-content: Center
+Box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25)
+SVG icon:
+
+Color: #FFFFFF
+Size: 20px
+
+
+
+
+Text "MediDiagnose AI" hoặc "LungVision AI":
+
+Font-size: 16px
+Font-weight: 700
+Color: #1E293B
+Letter-spacing: -0.3px
+
+
+
+b) User Profile:
+
+Display: Flex
+Align-items: Center
+Gap: 12px
+Avatar:
+
+Width: 44px
+Height: 44px
+Border-radius: 50%
+Object-fit: Cover
+Border: 2.5px solid #E2E8F0
+Box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08)
+
+
+Info column:
+
+Flex: 1
+Name "Dr. Johnson" / "Dr. Sarah Johnson":
+
+Font-size: 15px
+Font-weight: 700
+Color: #1E293B
+Margin-bottom: 3px
+
+
+Role "Radiologist" / "Pulmonologist":
+
+Font-size: 12px
+Color: #64748B
+Font-weight: 500
+
+
+
+
+
+2. NAVIGATION MENU:
+
+Padding: 20px 16px
+Flex: 1
+
+Menu Items (từ trên xuống):
+1. Dashboard:
+
+Display: Flex
+Align-items: Center
+Gap: 12px
+Padding: 12px 14px
+Border-radius: 10px
+Cursor: Pointer
+Transition: all 0.2s ease
+Margin-bottom: 6px
+Default state:
+
+Background: Transparent
+Color: #64748B
+
+
+Active state (khi đang ở trang Dashboard):
+
+Background: rgba(59, 130, 246, 0.08)
+Color: #3B82F6
+Border-left: 3px solid #3B82F6
+Padding-left: 11px
+Font-weight: 600
+
+
+Hover state:
+
+Background: #F8FAFC
+Color: #1E293B
+
+
+Icon:
+
+Size: 20px
+Color: Inherit
+Stroke-width: 2
+
+
+Text "Dashboard":
+
+Font-size: 14px
+Font-weight: 500
+Color: Inherit
+
+
+
+2. Upload Scan:
+
+Cấu trúc giống Dashboard
+Icon: Upload cloud
+Text: "Upload Scan"
+
+3. AI Diagnosis:
+
+Icon: Brain/Lung AI
+Text: "AI Diagnosis"
+
+4. Patient Records:
+
+Icon: Folder/File
+Text: "Patient Records"
+
+5. Reports:
+
+Icon: Document text
+Text: "Reports"
+
+6. Settings:
+
+Icon: Gear/Cog
+Text: "Settings"
+Margin-top: Auto (đẩy xuống bottom)
+
+3. LOGOUT BUTTON (Footer):
+
+Position: Bottom
+Padding: 20px 16px
+Border-top: 1px solid #F1F5F9
+Button:
+
+Width: 100%
+Height: 44px
+Background: Transparent
+Border: 1.5px solid #E2E8F0
+Border-radius: 10px
+Color: #EF4444 (đỏ)
+Font-size: 14px
+Font-weight: 600
+Cursor: Pointer
+Display: Flex
+Align-items: Center
+Justify-content: Center
+Gap: 10px
+Transition: all 0.3s ease
+Icon logout:
+
+Size: 18px
+Color: #EF4444
+
+
+Hover:
+
+Background: rgba(239, 68, 68, 0.05)
+Border-color: #EF4444
+Transform: translateY(-2px)
+
+
+
+
+
+4.2. DASHBOARD - Doctor View
+HEADER BAR:
+
+Same structure như Admin nhưng không có System Status
+Hiển thị user info: Avatar + Name + Role
+
+VỊ TRÍ & BỐ CỤC:
+
+Margin-left: 240px
+Padding: 32px
+Background: #F8FAFC
+
+1. WELCOME SECTION:
+Container:
+
+Margin-bottom: 32px
+Heading "Welcome back, Dr. John!" / "Welcome back, Dr. Johnson":
+
+Font-size: 28px
+Font-weight: 700
+Color: #1E293B
+Margin-bottom: 8px
+Letter-spacing: -0.5px
+
+
+Subtitle "Here's what's happening with your patients today.":
+
+Font-size: 15px
+Color: #64748B
+Font-weight: 400
+
+
+
+2. METRICS CARDS:
+
+Display: Grid
+Grid-template-columns: Repeat(3, 1fr)
+Gap: 24px
+Margin-bottom: 32px
+
+Version 1 (Dr. John Dashboard):
+Card 1 - Total Patients:
+
+Background: #FFFFFF
+Border-radius: 12px
+Padding: 24px
+Box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08)
+Border: 1px solid #E2E8F0
+Layout:
+
+Display: Flex
+Justify-content: Space-between
+
+Left content:
+
+Label "Total Patients":
+
+Font-size: 14px
+Color: #64748B
+Margin-bottom: 8px
+
+
+Value "1,247":
+
+Font-size: 36px
+Font-weight: 700
+Color: #1E293B
+Line-height: 1
+
+
+
+Right icon:
+
+Width: 52px
+Height: 52px
+Background: rgba(59, 130, 246, 0.1)
+Border-radius: 12px
+Display: Flex
+Align-items: Center
+Justify-content: Center
+Icon users (nhóm người):
+
+Size: 26px
+Color: #3B82F6
+
+
+
+
+
+Card 2 - Today's Scans:
+
+Label: "Today's Scans"
+Value: "24"
+Icon: Scan/Upload
+Icon background: rgba(16, 185, 129, 0.1)
+Icon color: #10B981
+
+Card 3 - Pending Reviews:
+
+Label: "Pending Reviews"
+Value: "3"
+Icon: Alert triangle
+Icon background: rgba(245, 158, 11, 0.1)
+Icon color: #F59E0B
+
+Version 2 (Dr. Johnson Dashboard):
+Card 1 - Total Scans Today:
+
+Label: "Total Scans Today"
+Value: "24"
+Icon: Scan
+Icon background: rgba(59, 130, 246, 0.1)
+Icon color: #3B82F6
+
+Card 2 - Diagnoses Complete:
+
+Label: "Diagnoses Complete"
+Value: "18"
+Icon: Checkmark circle
+Icon background: rgba(16, 185, 129, 0.1)
+Icon color: #10B981
+
+Card 3 - Alert Cases:
+
+Label: "Alert Cases"
+Value: "3"
+Icon: Alert triangle
+Icon background: rgba(239, 68, 68, 0.1)
+Icon color: #EF4444
+
+3. CONTENT GRID (2 cột):
+
+Display: Grid
+Grid-template-columns: 1.5fr 1fr
+Gap: 24px
+
+COLUMN 1 (Bên trái) - Latest Scans:
+Container:
+
+Background: #FFFFFF
+Border-radius: 12px
+Padding: 28px
+Box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08)
+Border: 1px solid #E2E8F0
+
+Header:
+
+Font-size: 18px
+Font-weight: 700
+Color: #1E293B
+Margin-bottom: 20px
+
+Scan Items (4 items):
+Item structure:
+
+Display: Flex
+Align-items: Center
+Gap: 14px
+Padding: 16px 0
+Border-bottom: 1px solid #F1F5F9 (except last)
+Transition: Background 0.2s
+Hover:
+
+Background: #FAFBFC
+Cursor: Pointer
+Border-radius: 8px
+Padding: 16px 12px
+
+
+
+Item 1 - John Smith (Pending):
+Avatar:
+
+Width: 44px
+Height: 44px
+Border-radius: 50%
+Background: #E2E8F0
+Display: Flex
+Align-items: Center
+Justify-content: Center
+Font-size: 16px
+Font-weight: 700
+Color: #64748B
+Text: "JS"
+
+Info column (Flex: 1):
+
+Name "John Smith":
+
+Font-size: 15px
+Font-weight: 600
+Color: #1E293B
+Margin-bottom: 4px
+
+
+Timestamp "Jan 15, 2025 - 2:30 PM":
+
+Font-size: 13px
+Color: #94A3B8
+
+
+
+Status badge:
+
+Padding: 6px 12px
+Background: rgba(245, 158, 11, 0.1)
+Color: #F59E0B
+Border-radius: 6px
+Font-size: 12px
+Font-weight: 700
+Text: "Pending"
+
+Item 2 - Maria Garcia (Complete):
+
+Avatar: "MG"
+Name: "Maria Garcia"
+Time: "Jan 15, 2025 - 1:45 PM"
+Status: "Complete"
+
+Background: rgba(16, 185, 129, 0.1)
+Color: #10B981
+
+
+
+Item 3 - Robert Chen (Alert):
+
+Avatar: "RC"
+Name: "Robert Chen"
+Time: "Jan 15, 2025 - 12:20 PM"
+Status: "Alert"
+
+Background: rgba(239, 68, 68, 0.1)
+Color: #EF4444
+
+
+
+Item 4 - Maria Garcia (Complete):
+
+Avatar: "MG"
+Name: "Maria Garcia"
+Time: "Jan 15, 2025 - 11:30 AM"
+Status: "Complete" (xanh lá)
+
+COLUMN 2 (Bên phải) - Quick Actions:
+Container:
+
+Background: #FFFFFF
+Border-radius: 12px
+Padding: 28px
+Box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08)
+Border: 1px solid #E2E8F0
+
+Title:
+
+Font-size: 18px
+Font-weight: 700
+Color: #1E293B
+Margin-bottom: 20px
+
+Action Items (3 items):
+Action structure:
+
+Padding: 18px
+Background: #F8FAFC
+Border: 1.5px solid #E2E8F0
+Border-radius: 10px
+Margin-bottom: 14px (except last)
+Cursor: Pointer
+Transition: all 0.3s ease
+Hover:
+
+Background: #FFFFFF
+Border-color: #3B82F6
+Transform: translateY(-2px)
+Box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08)
+
+
+
+Action 1 - Upload New Scan:
+Layout:
+
+Display: Flex
+Align-items: Center
+Gap: 14px
+
+Icon:
+
+Width: 44px
+Height: 44px
+Background: rgba(59, 130, 246, 0.1)
+Border-radius: 10px
+Display: Flex
+Align-items: Center
+Justify-content: Center
+Flex-shrink: 0
+Icon upload:
+
+Size: 22px
+Color: #3B82F6
+
+
+
+Content:
+
+Title "Upload New Scan":
+
+Font-size: 15px
+Font-weight: 600
+Color: #1E293B
+Margin-bottom: 4px
+
+
+Description "Add a new CT scan for analysis":
+
+Font-size: 13px
+Color: #64748B
+Line-height: 1.3
+
+
+
+Action 2 - Start Diagnosis:
+
+Icon: Brain/AI (size 22px)
+Icon background: rgba(16, 185, 129, 0.1)
+Icon color: #10B981
+Title: "Start Diagnosis"
+Description: "Begin AI-powered analysis" / "Run AI analysis"
+
+Action 3 - View Reports:
+
+Icon: Document/Chart (size 22px)
+Icon background: rgba(139, 92, 246, 0.1)
+Icon color: #8B5CF6
+Title: "View Reports"
+Description: "Access detailed diagnostic reports" / "Access patient reports"
+
+4. RECENT PATIENTS TABLE (Optional - chỉ có ở 1 phiên bản):
+Container:
+
+Grid-column: 1 / -1 (full width)
+Background: #FFFFFF
+Border-radius: 12px
+Padding: 28px
+Box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08)
+Border: 1px solid #E2E8F0
+Margin-top: 24px
+
+Title:
+
+Font-size: 18px
+Font-weight: 700
+Color: #1E293B
+Margin-bottom: 20px
+
+Table:
+
+Width: 100%
+
+Header:
+
+Columns: Name | Age | Last Scan | Status
+Font-size: 12px
+Font-weight: 700
+Color: #64748B
+Text-transform: Uppercase
+Padding: 12px 16px
+Background: #F8FAFC
+Border-bottom: 1px solid #E2E8F0
+
+Rows:
+Row 1 - Sarah Johnson:
+
+Name: "Sarah Johnson"
+Age: "45"
+Last Scan: "2024-01-29"
+Status: "Normal" (badge xanh lá)
+
+Row 2 - Michael Chen:
+
+Name: "Michael Chen"
+Age: "62"
+Last Scan: "2024-01-29"
+Status: "Abnormal" (badge đỏ)
+
+Row 3 - Emma Davis:
+
+Name: "Emma Davis"
+Age: "38"
+Last Scan: "2024-01-28"
+Status: "Normal" (badge xanh lá)
+
+4.3. AI DIAGNOSIS PAGE - Upload & Analysis
+HEADER:
+
+Margin-left: 240px
+Sticky top 0
+Display: Flex
+Justify-content: Space-between
+Padding: 20px 32px
+Background: #FFFFFF
+Border-bottom: 1px solid #E2E8F0
+
+Left - User info:
+
+Avatar + Name + Role
+
+Right:
+
+"Help" button
+"Logout" button (hoặc dropdown menu)
+
+MAIN CONTENT:
+
+Margin-left: 240px
+Padding: 32px
+Background: #F8FAFC
+
+1. PAGE HEADER:
+Title "AI-Powered Lung Diagnosis":
+
+Font-size: 32px
+Font-weight: 700
+Color: #1E293B
+Margin-bottom: 8px
+Letter-spacing: -0.8px
+
+Subtitle:
+
+Text: "Upload chest X-ray or CT scan images for AI-assisted diagnosis and analysis"
+Font-size: 15px
+Color: #64748B
+Margin-bottom: 32px
+
+2. CONTENT LAYOUT (2 cột):
+
+Display: Grid
+Grid-template-columns: 1.4fr 1fr
+Gap: 28px
+
+
+COLUMN 1 (Bên trái):
+A. UPLOAD SECTION:
+Container:
+
+Background: #FFFFFF
+Border-radius: 14px
+Padding: 28px
+Box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08)
+Border: 1px solid #E2E8F0
+Margin-bottom: 24px
+
+Title "Upload Medical Image":
+
+Display: Flex
+Align-items: Center
+Gap: 10px
+Font-size: 18px
+Font-weight: 700
+Color: #1E293B
+Margin-bottom: 20px
+Icon upload:
+
+Size: 22px
+Color: #3B82F6
+
+
+
+Upload Zone (khi chưa có file):
+
+Height: 280px
+Border: 2px dashed #CBD5E1
+Border-radius: 12px
+Background: #F8FAFC
+Display: Flex
+Flex-direction: Column
+Align-items: Center
+Justify-content: Center
+Cursor: Pointer
+Transition: all 0.3s ease
+Gap: 16px
+Hover:
+
+Border-color: #3B82F6
+Background: rgba(59, 130, 246, 0.02)
+
+
+Icon cloud-upload:
+
+Size: 56px
+Color: #3B82F6
+Margin-bottom: 12px
+
+
+Text "Drag & drop your scan here":
+
+Font-size: 16px
+Color: #475569
+Font-weight: 600
+
+
+Text "or click to browse files":
+
+Font-size: 14px
+Color: #94A3B8
+
+
+Button "Choose File":
+
+Margin-top: 16px
+Padding: 10px 24px
+Background: Linear-gradient(135deg, #1E293B 0%, #0F172A 100%)
+Border: None
+Border-radius: 8px
+Color: #FFFFFF
+Font-size: 14px
+Font-weight: 600
+Cursor: Pointer
+Box-shadow: 0 4px 12px rgba(30, 41, 59, 0.25)
+Hover:
+
+Transform: translateY(-2px)
+Box-shadow: 0 6px 16px rgba(30, 41, 59, 0.35)
+
+
+
+
+Info text:
+
+Margin-top: 12px
+Font-size: 12px
+Color: #94A3B8
+Text: "Supported formats: JPEG, PNG, DICOM (Max 50MB)"
+
+
+
+B. IMAGE PREVIEW SECTION:
+Container:
+
+Background: #FFFFFF
+Border-radius: 14px
+Padding: 28px
+Box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08)
+Border: 1px solid #E2E8F0
+
+Header:
+
+Display: Flex
+Justify-content: Space-between
+Align-items: Center
+Margin-bottom: 16px
+Title "Image Preview":
+
+Font-size: 18px
+Font-weight: 700
+Color: #1E293B
+
+
+Control icons:
+
+Display: Flex
+Gap: 8px
+Icon buttons (zoom-in, zoom-out, fullscreen):
+
+Width: 32px
+Height: 32px
+Background: #F8FAFC
+Border: 1px solid #E2E8F0
+Border-radius: 6px
+Display: Flex
+Align-items: Center
+Justify-content: Center
+Cursor: Pointer
+Icon:
+
+Size: 16px
+Color: #64748B
+
+
+Hover:
+
+Background: #E2E8F0
+Border-color: #CBD5E1
+
+
+
+
+
+
+
+Preview Area (khi chưa upload):
+
+Height: 420px
+Background: #0F172A (xám đen đậm)
+Border-radius: 12px
+Display: Flex
+Flex-direction: Column
+Align-items: Center
+Justify-content: Center
+Gap: 16px
+Icon X-ray:
+
+Size: 80px
+Color: rgba(255, 255, 255, 0.15)
+Stroke-width: 1.5
+
+
+Text "Chest X-Ray Preview":
+
+Font-size: 18px
+Color: rgba(255, 255, 255, 0.7)
+Font-weight: 600
+
+
+Text "Upload an image to begin analysis":
+
+Font-size: 14px
+Color: rgba(255, 255, 255, 0.4)
+
+
+
+Preview Area (khi đã upload - chest_xray_001.jpg):
+
+Position: Relative
+Height: 420px
+Background: #000000
+Border-radius: 12px
+Overflow: Hidden
+File label (top-left):
+
+Position: Absolute
+Top: 12px
+Left: 12px
+Padding: 6px 12px
+Background: rgba(0, 0, 0, 0.7)
+Backdrop-filter: Blur(10px)
+Border-radius: 6px
+Font-size: 12px
+Color: #FFFFFF
+Font-weight: 600
+Z-index: 10
+
+
+Image:
+
+Width: 100%
+Height: 100%
+Object-fit: Contain
+Filter: Hue-rotate (để tạo màu nhiệt: đỏ-cam-vàng-xanh)
+Glow effect: Drop-shadow(0 0 20px rgba(59, 130, 246, 0.4))
+
+
+
+C. ACTION BUTTONS:
+
+Display: Flex
+Gap: 12px
+Margin-top: 24px
+
+Button 1 - Run Diagnosis:
+
+Flex: 1
+Height: 50px
+Background: #475569 (xám đen - disabled state)
+Border: None
+Border-radius: 10px
+Color: #FFFFFF
+Font-size: 15px
+Font-weight: 600
+Cursor: Not-allowed
+Display: Flex
+Align-items: Center
+Justify-content: Center
+Gap: 10px
+Opacity: 0.6
+Icon play:
+
+Size: 18px
+
+
+Active state (khi có file):
+
+Background: Linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)
+Cursor: Pointer
+Opacity: 1
+Box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35)
+Hover:
+
+Transform: translateY(-2px)
+Box-shadow: 0 6px 20px rgba(59, 130, 246, 0.45)
+
+
+
+
+
+Button 2 - Save to Patient Record:
+
+Flex: 1
+Height: 50px
+Background: #FFFFFF
+Border: 1.5px solid #E2E8F0
+Border-radius: 10px
+Color: #475569
+Font-size: 15px
+Font-weight: 600
+Cursor: Pointer
+Display: Flex
+Align-items: Center
+Justify-content: Center
+Gap: 10px
+Transition: all 0.3s ease
+Icon save:
+
+Size: 18px
+
+
+Hover:
+
+Border-color: #10B981
+Color: #10B981
+Background: rgba(16, 185, 129, 0.02)
+
+
+
+Button 3 - Export PDF:
+
+Height: 50px
+Padding: 0 24px
+Background: #FFFFFF
+Border: 1.5px solid #EF4444
+Border-radius: 10px
+Color: #EF4444
+Font-size: 15px
+Font-weight: 600
+Cursor: Pointer
+Display: Flex
+Align-items: Center
+Justify-content: Center
+Gap: 10px
+Transition: all 0.3s ease
+Icon document:
+
+Size: 18px
+
+
+Hover:
+
+Background: rgba(239, 68, 68, 0.05)
+Border-color: #DC2626
+
+
+
+
+COLUMN 2 (Bên phải):
+A. AI CONFIDENCE CARD:
+Container:
+
+Background: #FFFFFF
+Border-radius: 14px
+Padding: 28px
+Box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08)
+Border: 1px solid #E2E8F0
+Margin-bottom: 24px
+
+Title "AI Confidence":
+
+Display: Flex
+Align-items: Center
+Gap: 10px
+Font-size: 16px
+Font-weight: 700
+Color: #1E293B
+Margin-bottom: 20px
+Icon:
+
+Size: 20px
+Color: #3B82F6
+
+
+
+Confidence Score:
+
+Display: Flex
+Justify-content: Space-between
+Align-items: Baseline
+Margin-bottom: 12px
+Label "Confidence Score":
+
+Font-size: 13px
+Color: #64748B
+Font-weight: 600
+
+
+Value "94.7%" / "92%":
+
+Font-size: 32px
+Font-weight: 700
+Color: #10B981 (xanh lá - high confidence)
+
+
+
+Progress Bar:
+
+Width: 100%
+Height: 10px
+Background: #E2E8F0
+Border-radius: 5px
+Overflow: Hidden
+Margin-bottom: 12px
+Fill:
+
+Width: 94.7% / 92%
+Height: 100%
+Background: Linear-gradient(90deg, #10B981 0%, #059669 100%)
+Border-radius: 5px
+
+
+
+Status Text:
+
+Font-size: 13px
+Color: #10B981
+Font-weight: 600
+Text: "High confidence detection"
+
+B. DETECTED ABNORMALITIES CARD:
+Container:
+
+Background: #FFFFFF
+Border-radius: 14px
+Padding: 28px
+Box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08)
+Border: 1px solid #E2E8F0
+Margin-bottom: 24px
+
+Title "Detected Abnormalities":
+
+Display: Flex
+Align-items: Center
+Gap: 10px
+Font-size: 16px
+Font-weight: 700
+Color: #1E293B
+Margin-bottom: 20px
+Icon alert-triangle:
+
+Size: 20px
+Color: #F59E0B
+
+
+
+Abnormality Items (3 items):
+Item 1 - Pneumonia (87%):
+Container:
+
+Padding: 16px
+Background: rgba(239, 68, 68, 0.04)
+Border-left: 3px solid #EF4444
+Border-radius: 8px
+Margin-bottom: 12px
+
+Layout:
+
+Display: Flex
+Justify-content: Space-between
+Align-items: Center
+
+Left side:
+
+Display: Flex
+Align-items: Center
+Gap: 12px
+Dot indicator:
+
+Width: 10px
+Height: 10px
+Background: #EF4444
+Border-radius: 50%
+Flex-shrink: 0
+
+
+Text "Pneumonia":
+
+Font-size: 15px
+Color: #1E293B
+Font-weight: 600
+
+
+
+Right side:
+
+Text "87%":
+
+Font-size: 15px
+Color: #EF4444
+Font-weight: 700
+
+
+
+Item 2 - Small Nodule / Lung Nodule (62% / 34%):
+
+Container background: rgba(245, 158, 11, 0.04)
+Border-left: 3px solid #F59E0B
+Dot color: #F59E0B
+Text color: #F59E0B
+Label: "Small Nodule" hoặc "Lung Nodule"
+Value: "62%" hoặc "34%"
+
+Item 3 - Mild Fibrosis (45%):
+
+Container background: rgba(59, 130, 246, 0.04)
+Border-left: 3px solid #3B82F6
+Dot color: #3B82F6
+Text color: #3B82F6
+Label: "Mild Fibrosis"
+Value: "45%"
+
+C. SUGGESTED DIAGNOSIS CARD:
+Container:
+
+Background: #FFFFFF
+Border-radius: 14px
+Padding: 28px
+Box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08)
+Border: 1px solid #E2E8F0
+Margin-bottom: 24px
+
+Title "Suggested Diagnosis":
+
+Font-size: 16px
+Font-weight: 700
+Color: #1E293B
+Margin-bottom: 16px
+
+Diagnosis Text:
+
+Font-size: 14px
+Color: #475569
+Line-height: 1.7
+Text-align: Justify
+
+Version 1:
+"The AI analysis indicates signs of pneumonia in the lower right lobe with high confidence. A small nodule is detected in the upper left region requiring further investigation. Recommend immediate treatment for pneumonia and follow-up imaging for nodule monitoring."
+Version 2:
+"Analysis indicates possible pneumonia in the lower right lung region. Recommend clinical correlation and follow-up imaging if symptoms persist."
+D. HIGHLIGHTED REGIONS CARD:
+Container:
+
+Background: #FFFFFF
+Border-radius: 14px
+Padding: 28px
+Box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08)
+Border: 1px solid #E2E8F0
+Margin-bottom: 24px
+
+Title:
+
+Font-size: 16px
+Font-weight: 700
+Color: #1E293B
+Margin-bottom: 16px
+
+Placeholder Area:
+
+Height: 180px
+Background: #F8FAFC
+Border: 1px dashed #CBD5E1
+Border-radius: 10px
+Display: Flex
+Flex-direction: Column
+Align-items: Center
+Justify-content: Center
+Gap: 10px
+Icon map-pin:
+
+Size: 40px
+Color: #CBD5E1
+
+
+Text "Region overlay will appear here":
+
+Font-size: 14px
+Color: #94A3B8
+Font-weight: 500
+
+
+
+E. PATIENT INFORMATION CARD (Collapsible):
+Container:
+
+Background: #FFFFFF
+Border-radius: 14px
+Padding: 24px
+Box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08)
+Border: 1px solid #E2E8F0
+
+Header (Clickable):
+
+Display: Flex
+Justify-content: Space-between
+Align-items: Center
+Cursor: Pointer
+Margin-bottom: 16px (khi expanded)
+Title "Patient Information":
+
+Display: Flex
+Align-items: Center
+Gap: 10px
+Font-size: 16px
+Font-weight: 700
+Color: #1E293B
+Icon user:
+
+Size: 20px
+Color: #3B82F6
+
+
+
+
+Icon chevron (down khi expanded, right khi collapsed):
+
+Size: 18px
+Color: #94A3B8
+Transition: Transform 0.3s ease
+
+
+
+Content (khi expanded):
+Info Grid:
+
+Display: Grid
+Grid-template-columns: 1fr 1fr
+Gap: 16px
+Margin-bottom: 16px
+
+Field structure:
+
+Label:
+
+Font-size: 12px
+Color: #64748B
+Font-weight: 600
+Text-transform: Uppercase
+Letter-spacing: 0.5px
+Margin-bottom: 6px
+
+
+Value:
+
+Font-size: 14px
+Color: #1E293B
+Font-weight: 500
+
+
+
+Fields:
+
+Patient ID: "PT-2025-0128"
+Scan Date: "Jan 28, 2025"
+Scan Type: "Chest X-Ray"
+Age: "45 years"
+
+Clinical Notes Section:
+
+Grid-column: 1 / -1 (full width)
+Padding-top: 16px
+Border-top: 1px solid #F1F5F9
+Label "Clinical Notes":
+
+Font-size: 12px
+Color: #64748B
+Font-weight: 600
+Margin-bottom: 8px
+
+
+Text box:
+
+Padding: 12px
+Background: #F8FAFC
+Border: 1px solid #E2E8F0
+Border-radius: 8px
+Font-size: 13px
+Color: #475569
+Line-height: 1.5
+Content: "Patient presents with persistent cough and shortness of breath for 5 days."
+
+
+
+3. PAGE FOOTER:
+Container:
+
+Margin-top: 40px
+Padding-top: 24px
+Border-top: 1px solid #E2E8F0
+Display: Flex
+Justify-content: Space-between
+Align-items: Center
+
+Left side:
+
+Text "© 2025 Medical AI Diagnosis System. All rights reserved.":
+
+Font-size: 13px
+Color: #94A3B8
+
+
+
+Right side:
+
+Links:
+
+Display: Flex
+Gap: 24px
+Link style (Privacy Policy, Terms of Service, Support):
+
+Font-size: 13px
+Color: #64748B
+Text-decoration: None
+Font-weight: 500
+Hover:
+
+Color: #3B82F6
+Text-decoration: Underline
+
+
+
+
+
+
+
+
+5. GIAO DIỆN PATIENT RECORDS
+5.1. PATIENT RECORDS PAGE - MedLung Imaging System
+HEADER:
+
+Background: #FFFFFF
+Padding: 24px 32px
+Border-bottom: 1px solid #E2E8F0
+Display: Flex
+Justify-content: Space-between
+Align-items: Center
+
+Left - Logo & Name:
+
+Display: Flex
+Align-items: Center
+Gap: 12px
+Logo:
+
+Icon phổi
+Size: 32px
+Color: #3B82F6
+
+
+Text "MedLung Imaging System":
+
+Font-size: 18px
+Font-weight: 700
+Color: #1E293B
+
+
+
+Right - User:
+
+Notification icon + Avatar + Name dropdown
+
+MAIN CONTENT:
+
+Margin-left: 240px (nếu có sidebar)
+Padding: 32px
+Background: #F8FAFC
+
+1. PAGE HEADER:
+Container:
+
+Margin-bottom: 28px
+
+Title "Patient Records":
+
+Font-size: 28px
+Font-weight: 700
+Color: #1E293B
+Margin-bottom: 8px
+
+Subtitle:
+
+Text: "Manage and view patient medical records"
+Font-size: 15px
+Color: #64748B
+
+2. FILTERS SECTION:
+Container:
+
+Background: #FFFFFF
+Border-radius: 12px
+Padding: 24px
+Box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08)
+Border: 1px solid #E2E8F0
+Margin-bottom: 24px
+
+Filters Grid:
+
+Display: Grid
+Grid-template-columns: Repeat(4, 1fr)
+Gap: 16px
+Margin-bottom: 20px
+
+Filter 1 - Search Patients:
+
+Label "Search Patients":
+
+Font-size: 13px
+Font-weight: 600
+Color: #334155
+Margin-bottom: 8px
+
+
+Input:
+
+Width: 100%
+Height: 44px
+Padding: 10px 14px 10px 40px
+Background: #FFFFFF
+Border: 1.5px solid #E2E8F0
+Border-radius: 8px
+Font-size: 14px
+Placeholder: "Name, ID, or Phone Number"
+Placeholder color: #CBD5E1
+Icon search:
+
+Position: Absolute left
+Left: 12px
+Size: 18px
+Color: #94A3B8
+
+
+
+
+
+Filter 2 - Diagnosis:
+
+Dropdown "All Diagnoses"
+Cấu trúc giống các dropdown trước
+
+Filter 3 - Scan Type:
+
+Dropdown "All Types"
+
+Filter 4 - Date Range:
+
+Input type date
+Placeholder: "mm/dd/yyyy"
+
+Action Buttons:
+
+Display: Flex
+Gap: 12px
+Justify-content: Flex-end
+Button "Clear Filters":
+
+Padding: 10px 20px
+Background: Transparent
+Border: None
+Color: #64748B
+Font-size: 14px
+Font-weight: 600
+Cursor: Pointer
+Hover:
+
+Color: #3B82F6
+
+
+
+
+Button "Apply Filters":
+
+Padding: 10px 24px
+Background: Linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)
+Border: None
+Border-radius: 8px
+Color: #FFFFFF
+Font-size: 14px
+Font-weight: 600
+Cursor: Pointer
+Box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3)
+
+
+
+3. PATIENT LIST SECTION:
+Container:
+
+Background: #FFFFFF
+Border-radius: 12px
+Box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08)
+Border: 1px solid #E2E8F0
+Overflow: Hidden
+
+Header:
+
+Display: Flex
+Justify-content: Space-between
+Align-items: Center
+Padding: 20px 24px
+Background: #FAFBFC
+
+Left side:
+
+Text "Patient List":
+
+Font-size: 18px
+Font-weight: 700
+Color: #1E293B
+
+
+
+Right side:
+
+Display: Flex
+Gap: 20px
+Align-items: Center
+Text "Showing 1-10 of 247 patients":
+
+Font-size: 13px
+Color: #64748B
+
+
+Sort control:
+
+Text "Sort by:":
+
+Font-size: 13px
+Color: #64748B
+Margin-right: 8px
+
+
+Dropdown "Last Scan Date":
+
+Padding: 6px 28px 6px 10px
+Background: #FFFFFF
+Border: 1px solid #E2E8F0
+Border-radius: 6px
+Font-size: 13px
+Cursor: Pointer
+
+
+
+
+
+TABLE:
+Table Header:
+
+Background: #F8FAFC
+Border-bottom: 1px solid #E2E8F0
+
+Columns:
+
+Patient ID (Width: 12%)
+Name (Width: 22%)
+Date of Birth (Width: 15%)
+Gender (Width: 12%)
+Last Diagnosis (Width: 18%)
+Last Scan (Width: 14%)
+Actions (Width: 7%)
+
+Header Cell Style:
+
+Padding: 12px 20px
+Font-size: 12px
+Font-weight: 700
+Color: #64748B
+Text-transform: Uppercase
+Letter-spacing: 0.5px
+
+TABLE ROWS:
+Row structure:
+
+Padding: 16px 20px
+Border-bottom: 1px solid #F1F5F9
+Transition: Background 0.2s
+Hover:
+
+Background: #FAFBFC
+
+
+
+Row 1 - Sarah Johnson:
+Cell 1 - Patient ID:
+
+Text: "PT-2025-001"
+Font-size: 13px
+Color: #64748B
+Font-weight: 600
+Font-family: Monospace
+
+Cell 2 - Name:
+
+Display: Flex
+Align-items: Center
+Gap: 12px
+Avatar:
+
+Width: 36px
+Height: 36px
+Border-radius: 50%
+Object-fit: Cover
+Border: 2px solid #E2E8F0
+
+
+Text "Sarah Johnson":
+
+Font-size: 14px
+Color: #1E293B
+Font-weight: 600
+
+
+
+Cell 3 - Date of Birth:
+
+Text: "Mar 15, 1985"
+Font-size: 13px
+Color: #475569
+
+Cell 4 - Gender:
+
+Text: "Female"
+Font-size: 13px
+Color: #475569
+
+Cell 5 - Last Diagnosis:
+
+Badge "Normal":
+
+Padding: 6px 12px
+Background: rgba(16, 185, 129, 0.1)
+Color: #10B981
+Border-radius: 6px
+Font-size: 12px
+Font-weight: 700
+
+
+
+Cell 6 - Last Scan:
+
+Text: "Jan 28, 2025"
+Font-size: 13px
+Color: #475569
+
+Cell 7 - Actions:
+
+Display: Flex
+Gap: 8px
+Icon buttons (view, edit, download):
+
+Width: 32px
+Height: 32px
+Background: Transparent
+Border: None
+Border-radius: 6px
+Cursor: Pointer
+Display: Flex
+Align-items: Center
+Justify-content: Center
+Icon:
+
+Size: 16px
+
+
+View (eye): Color #3B82F6
+Edit (pencil): Color #F59E0B
+Download (arrow-down): Color #8B5CF6
+Hover:
+
+Background: rgba của màu icon, opacity 0.1
+
+
+
+
+
+Row 2 - Michael Chen:
+
+Patient ID: "PT-2025-002"
+Name: "Michael Chen"
+DOB: "Jul 22, 1978"
+Gender: "Male"
+Diagnosis: "Pneumonia" (badge vàng)
+
+Background: rgba(245, 158, 11, 0.1)
+Color: #F59E0B
+
+
+Last Scan: "Jan 27, 2025"
+
+Row 3 - Emma Rodriguez:
+
+Patient ID: "PT-2025-003"
+Name: "Emma Rodriguez"
+DOB: "Dec 03, 1992"
+Gender: "Female"
+Diagnosis: "COVID-19" (badge đỏ)
+
+Background: rgba(239, 68, 68, 0.1)
+Color: #EF4444
+
+
+Last Scan: "Jan 26, 2025"
+
+4. PAGINATION:
+Container:
+
+Padding: 16px 24px
+Border-top: 1px solid #E2E8F0
+Background: #FAFBFC
+Display: Flex
+Justify-content: Space-between
+Align-items: Center
+
+Left side - Rows per page:
+
+Display: Flex
+Align-items: Center
+Gap: 10px
+Text "Rows per page:":
+
+Font-size: 13px
+Color: #64748B
+
+
+Dropdown "..." (dots):
+
+Cấu trúc giống dropdown khác
+Options: 10, 25, 50, 100
+
+
+
+Right side - Navigation:
+
+Display: Flex
+Gap: 8px
+Align-items: Center
+Text "Page 1 of 25":
+
+Font-size: 13px
+Color: #64748B
+Margin-right: 12px
+
+
+Button "Previous":
+
+Padding: 8px 14px
+Background: #FFFFFF
+Border: 1px solid #E2E8F0
+Border-radius: 6px
+Font-size: 13px
+Color: #64748B
+Cursor: Not-allowed
+Opacity: 0.5
+
+
+Page Numbers:
+
+Button "1" (active):
+
+Padding: 8px 12px
+Background: #3B82F6
+Border: None
+Border-radius: 6px
+Color: #FFFFFF
+Font-weight: 600
+
+
+Button "2", "3":
+
+Background: #FFFFFF
+Border: 1px solid #E2E8F0
+Color: #64748B
+Hover:
+
+Background: #F8FAFC
+
+
+
+
+
+
+Button "Next":
+
+Padding: 8px 14px
+Background: #FFFFFF
+Border: 1px solid #E2E8F0
+Border-radius: 6px
+Font-size: 13px
+Color: #475569
+Cursor: Pointer
+Hover:
+
+Border-color: #3B82F6
+Color: #3B82F6
+
+
+
+
+
+5. NEW PATIENT RECORD BUTTON (Floating/Fixed):
+
+Position: Fixed bottom-right
+Bottom: 32px
+Right: 32px
+Width: 56px
+Height: 56px
+Background: Linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)
+Border: None
+Border-radius: 50%
+Box-shadow: 0 8px 24px rgba(59, 130, 246, 0.4)
+Cursor: Pointer
+Display: Flex
+Align-items: Center
+Justify-content: Center
+Z-index: 100
+Transition: all 0.3s ease
+
+Hoặc:
+
+Position: Top-right của container
+Padding: 10px 20px
+Border-radius: 8px
+Text "+ New Patient Record"
+Icon plus:
+
+Size: 24px
+Color: #FFFFFF
+
+
+Hover:
+
+Transform: Scale(1.1)
+Box-shadow: 0 12px 32px rgba(59, 130, 246, 0.5)
+
+
+
+
+6. DASHBOARD KHÁC (VẬN LANG UNIVERSITY - LỊCH SỬ PHÂN TÍCH)
+VỊ TRÍ & BỐ CỤC:
+SIDEBAR (Bên trái):
+
+Width: 280px
+Background: Linear-gradient(180deg, #1E293B 0%, #0F172A 100%)
+
+Header - Logo Section:
+
+Padding: 24px 20px
+Border-bottom: 1px solid rgba(255, 255, 255, 0.08)
+Logo:
+
+Background: #DC2626 (đỏ)
+Width: 56px
+Height: 56px
+Display: Flex
+Align-items: Center
+Justify-content: Center
+Border-radius: 12px
+Margin-bottom: 12px
+Letter "V":
+
+Font-size: 32px
+Font-weight: 900
+Color: #FFFFFF
+
+
+
+
+University Name:
+
+Text "VANLANG UNIVERSITY":
+
+Font-size: 14px
+Font-weight: 700
+Color: #FFFFFF
+Letter-spacing: 1.5px
+Text-align: Center
+
+
+Subtext "UNIVERSITY":
+
+Font-size: 11px
+Color: rgba(255, 255, 255, 0.6)
+Letter-spacing: 2px
+
+
+
+
+
+User Profile:
+
+Padding: 20px
+Display: Flex
+Align-items: Center
+Gap: 14px
+Avatar:
+
+Width: 48px
+Height: 48px
+Border-radius: 50%
+Border: 2.5px solid rgba(255, 255, 255, 0.2)
+
+
+Name "Phạm Hoàng Huân":
+
+Font-size: 15px
+Font-weight: 600
+Color: #FFFFFF
+
+
+
+Menu:
+
+Padding: 24px 16px
+
+Menu Items (tiếng Việt):
+1. Hồ sơ bệnh nhân:
+
+Font-size: 15px
+Color: #CBD5E1
+Padding: 12px 14px
+Border-radius: 8px
+Cursor: Pointer
+Margin-bottom: 8px
+Hover:
+
+Background: rgba(255, 255, 255, 0.05)
+
+
+
+2. Tạo hồ sơ mới (Sub-item):
+
+Padding-left: 28px
+Font-size: 14px
+Color: #94A3B8
+
+3. Analyze AI (Sub-item):
+
+Padding-left: 28px
+
+4. Lịch sử phân tích (ACTIVE):
+
+Background: #DC2626 (đỏ)
+Color: #FFFFFF
+Font-weight: 700
+Box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3)
+
+5. Kê đơn thuốc (Coming soon):
+
+Color: #64748B
+Cursor: Not-allowed
+Badge "Coming soon":
+
+Padding: 3px 8px
+Background: rgba(100, 116, 139, 0.2)
+Border-radius: 4px
+Font-size: 10px
+Margin-left: Auto
+
+
+
+Footer - Logout:
+
+Padding: 20px
+Border-top: 1px solid rgba(255, 255, 255, 0.08)
+Button "Log Out":
+
+Width: 100%
+Height: 44px
+Background: Transparent
+Border: 1.5px solid rgba(255, 255, 255, 0.2)
+Border-radius: 10px
+Color: #FFFFFF
+Font-size: 14px
+Font-weight: 600
+Display: Flex
+Align-items: Center
+Justify-content: Center
+Gap: 10px
+Cursor: Pointer
+Icon logout:
+
+Size: 18px
+
+
+Hover:
+
+Background: rgba(239, 68, 68, 0.1)
+Border-color: #EF4444
+
+
+
+
+
+MAIN CONTENT:
+
+Margin-left: 280px
+Padding: 40px
+Background: #F1F5F9
+
+1. PAGE TITLE:
+
+Text "Dashboard":
+
+Font-size: 32px
+Font-weight: 700
+Color: #1E293B
+Margin-bottom: 32px
+
+
+
+2. XYZ SCORE CARDS:
+
+Display: Grid
+Grid-template-columns: Repeat(4, 1fr)
+Gap: 20px
+Margin-bottom: 36px
+
+Card structure (4 màu khác nhau):
+Container:
+
+Height: 140px
+Border-radius: 16px
+Padding: 24px
+Box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1)
+Position: Relative
+Overflow: Hidden
+
+Card 1 - Blue:
+
+Background: Linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%)
+
+Card 2 - Green:
+
+Background: Linear-gradient(135deg, #10B981 0%, #34D399 100%)
+
+Card 3 - Light Green:
+
+Background: Linear-gradient(135deg, #84CC16 0%, #A3E635 100%)
+
+Card 4 - Orange:
+
+Background: Linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%)
+
+Content:
+
+Text "XYZ Score":
+
+Font-size: 14px
+Color: rgba(255, 255, 255, 0.9)
+Font-weight: 500
+Margin-bottom: 12px
+
+
+Score Badge:
+
+Width: 72px
+Height: 72px
+Background: rgba(255, 255, 255, 0.25)
+Backdrop-filter: Blur(10px)
+Border: 2px solid rgba(255, 255, 255, 0.3)
+Border-radius: 50%
+Display: Flex
+Align-items: Center
+Justify-content: Center
+Position: Absolute
+Bottom: 20px
+Left: 50%
+Transform: TranslateX(-50%)
+Text "1234":
+
+Font-size: 20px
+Font-weight: 700
+Color: #FFFFFF
+
+
+
+
+
+3. CHARTS SECTION:
+
+Display: Grid
+Grid-template-columns: 1.8fr 1fr
+Gap: 28px
+
+CHART 1 (Bên trái) - Bar Chart:
+Container:
+
+Background: #FFFFFF
+Border-radius: 16px
+Padding: 32px
+Box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06)
+
+Header:
+
+Display: Flex
+Justify-content: Space-between
+Align-items: Center
+Margin-bottom: 28px
+Title "CHART TITLE":
+
+Font-size: 16px
+Font-weight: 700
+Color: #1E293B
+Letter-spacing: 0.5px
+
+
+Dropdown "THIS WEEK":
+
+Padding: 8px 30px 8px 12px
+Background: #F8FAFC
+Border: 1px solid #E2E8F0
+Border-radius: 8px
+Font-size: 13px
+Font-weight: 600
+Color: #64748B
+Cursor: Pointer
+Position: Relative
+Icon chevron-down:
+
+Position: Absolute right
+Size: 14px
+
+
+
+
+
+Labels:
+
+Margin-bottom: 16px
+Text "5,000,00":
+
+Font-size: 18px
+Font-weight: 700
+Color: #1E293B
+
+
+Text "50 Orders":
+
+Font-size: 13px
+Color: #64748B
+Margin-top: 4px
+
+
+
+Chart Area (Stacked Bar Chart):
+
+Height: 340px
+Canvas area
+
+Y-axis labels:
+
+0, 20, 40, 60, 80, 100, 120
+Font-size: 12px
+Color: #94A3B8
+Text-align: Right
+
+X-axis labels:
+
+Q1, Q2, Q3, Q4
+Font-size: 13px
+Color: #64748B
+Font-weight: 600
+Text-align: Center
+
+Bars:
+
+Mỗi quarter có 1 bar xếp chồng 3 màu
+Border-radius: 4px (top)
+Gap giữa bars: 24px
+Data 1 (đáy - hồng): #F472B6
+Data 2 (giữa - tím): #A78BFA
+Data 3 (trên - xanh): #60A5FA
+
+Legend (dưới chart):
+
+Display: Flex
+Gap: 32px
+Justify-content: Center
+Margin-top: 20px
+Item structure:
+
+Display: Flex
+Align-items: Center
+Gap: 8px
+Color dot:
+
+Width: 12px
+Height: 12px
+Border-radius: 2px
+Background: Màu tương ứng
+
+
+Text "Data 1", "Data 2", "Data 3":
+
+Font-size: 13px
+Color: #64748B
+Font-weight: 500
+
+
+
+
+
+CHART 2 (Bên phải) - Donut Chart:
+Container:
+
+Background: #FFFFFF
+Border-radius: 16px
+Padding: 32px
+Box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06)
+Display: Flex
+Flex-direction: Column
+Align-items: Center
+
+Donut Chart:
+
+Width: 280px
+Height: 280px
+Position: Relative
+Segments (clockwise từ top):
+
+Data 3 (xanh #60A5FA): 50%
+Data 2 (tím #A78BFA): 35%
+Data 1 (hồng #F472B6): 15%
+
+
+Center hole: 45% of radius
+Stroke-width: ~50px
+Smooth rounded caps
+
+Center Label (trong donut hole):
+
+Position: Absolute center
+Font-size: 32px
+Font-weight: 700
+Color: #1E293B
+
+Legend (bên phải chart):
+
+Position: Absolute right
+Display: Flex
+Flex-direction: Column
+Gap: 16px
+Margin-left: 32px
+
+Legend Items:
+Item 1 - Data 1:
+
+Display: Flex
+Align-items: Center
+Gap: 10px
+Color indicator:
+
+Width: 14px
+Height: 14px
+Background: #F472B6
+Border-radius: 50%
+
+
+Text "Data 1":
+
+Font-size: 14px
+Color: #64748B
+Font-weight: 500
+Margin-right: Auto
+
+
+Percentage "15%":
+
+Font-size: 14px
+Color: #1E293B
+Font-weight: 700
+
+
+
+Item 2 - Data 2:
+
+Color: #A78BFA
+Text: "Data 2"
+Percentage: "35%"
+
+Item 3 - Data 3:
+
+Color: #60A5FA
+Text: "Data 3"
+Percentage: "50%"
+
+
+7. TỔNG HỢP MÀU SẮC CHI TIẾT
+PRIMARY PALETTE:
+Blues (xanh dương):
+
+#3B82F6 - Primary blue (buttons, active states, links)
+#2563EB - Darker blue (button hover, gradients)
+#60A5FA - Light blue (icons, secondary elements)
+#DBEAFE - Very light blue (backgrounds)
+rgba(59, 130, 246, 0.1) - Blue 10% opacity (hover backgrounds)
+rgba(59, 130, 246, 0.08) - Blue 8% opacity (active menu items)
+
+Greens (xanh lá):
+
+#10B981 - Success green (status, positive metrics)
+#059669 - Darker green (hover states)
+#34D399 - Light green (charts, decorative)
+rgba(16, 185, 129, 0.1) - Green 10% opacity (success backgrounds)
+
+Reds (đỏ):
+
+#EF4444 - Error red (alerts, critical items)
+#DC2626 - Darker red (hover, active errors)
+#F87171 - Light red (decorative)
+#FEE2E2 - Very light red (error backgrounds)
+#DC2626 - Vanlang University brand red
+rgba(239, 68, 68, 0.1) - Red 10% opacity (error backgrounds)
+
+Yellows/Oranges (vàng/cam):
+
+#F59E0B - Warning orange (caution states)
+#D97706 - Darker orange (hover warnings)
+#FBBF24 - Light orange (charts)
+#FEF3C7 - Very light yellow (warning backgrounds)
+rgba(245, 158, 11, 0.1) - Orange 10% opacity (warning backgrounds)
+
+Purples (tím):
+
+#8B5CF6 - Purple (action items, secondary CTA)
+#7C3AED - Darker purple (hover)
+#A78BFA - Light purple (charts)
+rgba(139, 92, 246, 0.1) - Purple 10% opacity (action backgrounds)
+
+Pinks (hồng):
+
+#F472B6 - Pink (charts, decorative)
+
+NEUTRAL PALETTE:
+Grays (xám):
+
+#1E293B - Navy dark (primary text, headings)
+#0F172A - Darker navy (sidebar backgrounds, dark elements)
+#334155 - Dark gray (secondary text)
+#475569 - Medium-dark gray (body text)
+#64748B - Medium gray (tertiary text, labels)
+#94A3B8 - Light gray (placeholder text, disabled states)
+#CBD5E1 - Very light gray (borders, dividers)
+#E2E8F0 - Extra light gray (input borders, subtle borders)
+#F1F5F9 - Off-white gray (table dividers, subtle backgrounds)
+#F8FAFC - Very light background gray (page backgrounds)
+#FAFBFC - Almost white (table alternating rows)
+
+Pure:
+
+#FFFFFF - Pure white (card backgrounds, inputs)
+#000000 - Pure black (X-ray preview backgrounds)
+
+OPACITY VARIATIONS:
+Background overlays:
+
+rgba(255, 255, 255, 0.95) - 95% white (glass morphism panels)
+rgba(255, 255, 255, 0.7) - 70% white (glass morphism nested panels)
+rgba(255, 255, 255, 0.4) - 40% white (glass borders)
+rgba(0, 0, 0, 0.7) - 70% black (image overlays)
+rgba(0, 0, 0, 0.3) - 30% black (shadow overlays)
+
+Sidebar transparency:
+
+rgba(255, 255, 255, 0.05) - 5% white (sidebar hover states)
+rgba(255, 255, 255, 0.08) - 8% white (sidebar borders)
+rgba(255, 255, 255, 0.15) - 15% white (AI Assistant icon backgrounds)
+
+8. TYPOGRAPHY SYSTEM
+FONT FAMILIES:
+
+Primary: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif
+Monospace: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, monospace
+
+FONT SIZES:
+Headings:
+
+H1 (Page title): 32px / 2rem
+H2 (Section title): 28px / 1.75rem
+H3 (Card title): 24px / 1.5rem
+H4 (Subsection): 18px / 1.125rem
+H5 (Small heading): 16px / 1rem
+H6 (Label heading): 14px / 0.875rem
+
+Body text:
+
+Large: 16px / 1rem
+Regular: 15px / 0.9375rem
+Medium: 14px / 0.875rem
+Small: 13px / 0.8125rem
+Extra small: 12px / 0.75rem
+Tiny: 11px / 0.6875rem
+Micro: 10px / 0.625rem
+
+FONT WEIGHTS:
+
+Light: 300
+Regular: 400
+Medium: 500
+Semi-bold: 600
+Bold: 700
+Extra-bold: 800
+Black: 900
+
+LINE HEIGHTS:
+
+Tight: 1.2
+Snug: 1.3
+Normal: 1.4
+Relaxed: 1.5
+Loose: 1.7
+
+LETTER SPACING:
+
+Tighter: -0.8px (large headings)
+Tight: -0.5px (headings)
+Normal: 0
+Wide: 0.3px (buttons, labels)
+Wider: 0.5px (table headers)
+Widest: 1px (section labels)
+Extra-wide: 1.5px (university name)
+Ultra-wide: 2px (small caps)
+
+9. SPACING SYSTEM (8px BASE)
+Padding/Margin Scale:
+
+4px (0.25rem) - xs
+8px (0.5rem) - sm
+12px (0.75rem) - md
+16px (1rem) - lg
+20px (1.25rem) - xl
+24px (1.5rem) - 2xl
+28px (1.75rem) - 3xl
+32px (2rem) - 4xl
+40px (2.5rem) - 5xl
+48px (3rem) - 6xl
+56px (3.5rem) - 7xl
+
+Common Uses:
+
+Container padding: 32px (4xl)
+Card padding: 28px (3xl)
+Section gaps: 24px (2xl)
+Element gaps: 16px (lg)
+Item gaps: 12px (md)
+Icon gaps: 8px (sm)
+
+10. BORDER RADIUS SYSTEM
+
+None: 0
+Small: 4px (checkboxes, radio, small tags)
+Default: 6px (badges, small buttons)
+Medium: 8px (inputs, buttons, dropdowns)
+Large: 10px (large buttons, cards)
+XL: 12px (cards, sections)
+2XL: 14px (main content cards)
+3XL: 16px (score cards, feature cards)
+4XL: 20px (modal panels, large overlays)
+Circle: 50% (avatars, icon buttons, dots)
+Full: 9999px (pills, toggle switches)
+
+11. BOX SHADOW SYSTEM
+Elevation Levels:
+Level 0 - None:
+
+box-shadow: none
+
+Level 1 - Subtle:
+
+box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08)
+Use: Cards, panels, containers
+
+Level 2 - Low:
+
+box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06)
+Use: Hovered cards, dropdowns
+
+Level 3 - Medium:
+
+box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08)
+Use: Modals, popovers
+
+Level 4 - High:
+
+box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12)
+Use: Floating elements, tooltips
+
+Level 5 - Maximum:
+
+box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3)
+Use: Full-screen overlays, critical modals
+
+Colored Shadows (for buttons):
+
+Blue: 0 4px 14px rgba(59, 130, 246, 0.35)
+Green: 0 4px 14px rgba(16, 185, 129, 0.35)
+Red: 0 4px 14px rgba(239, 68, 68, 0.35)
+Purple: 0 4px 14px rgba(139, 92, 246, 0.35)
+
+Glow Effects:
+
+Blue glow: 0 0 8px rgba(59, 130, 246, 0.5)
+Green glow: 0 0 8px rgba(16, 185, 129, 0.5)
+X-ray glow: drop-shadow(0 0 20px rgba(59, 130, 246, 0.4))
+
+12. TRANSITION & ANIMATION
+Duration:
+
+Fast: 0.15s
+Normal: 0.2s
+Medium: 0.3s
+Slow: 0.5s
+
+Easing:
+
+ease
+ease-in
+ease-out
+ease-in-out (most common)
+cubic-bezier(custom)
+
+Common Transitions:
+
+All: all 0.3s ease
+Background: background 0.2s ease
+Color: color 0.2s ease
+Transform: transform 0.3s ease
+Box-shadow: box-shadow 0.3s ease
+Opacity: opacity 0.3s ease
+
+Animations:
+
+Pulse (status indicators):
+
+@keyframes pulse { 0%, 100% { opacity: 1 } 50% { opacity: 0.5 } }
+animation: pulse 2s infinite
+
+
+Fade in:
+
+@keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
+
+
+Slide up:
+
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0 } to { transform: translateY(0); opacity: 1 } }
+
+
+
+13. ROLE-BASED FEATURE SUMMARY
+ADMIN (Quản trị viên):
+
+Dashboard với system metrics
+Quản lý users (doctors, staff)
+Xem activity logs
+Cấu hình system settings
+Quản lý AI models
+Backup & storage management
+Permissions matrix
+System alerts & monitoring
+
+DOCTOR (Bác sĩ):
+
+Dashboard với patient metrics
+Upload medical scans
+AI-powered diagnosis
+Xem patient records
+Generate reports
+View diagnosis history
+Export results (PDF)
+Patient information management
+
+PATIENT (Bệnh nhân):
+
+Xem hồ sơ bệnh lý của họ
+Xem thông tin cá nhân
+Xem kết quả chẩn đoán
+Xem lịch sử scan
+(Không có quyền upload hoặc chỉnh sửa)
+
+
+KẾT LUẬN:
+Hệ thống MediDiagnose AI là một ứng dụng y tế toàn diện với:
+
+Giao diện hiện đại, chuyên nghiệp
+Hiệu ứng glass morphism tinh tế
+Color system nhất quán
+Typography rõ ràng, dễ đọc
+Spacing system có hệ thống (8px base)
+Animation & transition mượt mà
+Responsive design principles
+3 role rõ ràng với quyền hạn phân tầng
+AI integration cho medical imaging analysis
+Comprehensive data management
+
+Tất cả các element đều tuân theo design system thống nhất, tạo nên trải nghiệm người dùng mượt mà và chuyên nghiệp.

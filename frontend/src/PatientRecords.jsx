@@ -259,8 +259,7 @@ export default function PatientRecords({ user, onLogout, onNavigate }) {
       <div className="doctor-top-header">
         <div className="doctor-top-left">
           <div className="doctor-logo-small">
-            <span className="logo-icon">🫁</span>
-            <span className="logo-text">MediDiagnose AI</span>
+            <img src="/images/DH_VLU.png" alt="VLU Logo" className="logo-image" />
           </div>
         </div>
         <div className="doctor-top-right">

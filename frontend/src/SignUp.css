@@ -11,37 +11,56 @@ html, body {
   overflow: hidden;
 }
 
-/* Container chính - Fullscreen với background */
+/* Container chính - Fullscreen */
 .signup-page {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-end;
+  overflow: hidden;
   background-image: url("/images/Lungs'sHospital.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  display: flex;
-  align-items: stretch; /* Thay đổi từ center sang stretch */
-  justify-content: flex-end;
-  padding-left: 20%;
 }
 
-/* Form section - chiếm 50% bên phải, từ đầu đến cuối màn hình */
+.signup-page::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 60%;
+  height: 100vh;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 197, 253, 0.05) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Remove old background-section */
+.background-section {
+  display: none;
+}
+
+/* Form section - chiếm 40% bên phải, từ đầu đến cuối màn hình */
 .form-section {
-  width: 50%;
+  width: 40%;
   height: 100vh;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-left: 1px solid rgba(255, 255, 255, 0.2);
   display: flex;
-  align-items: flex-start; /* Thay đổi sang flex-start */
+  align-items: flex-start;
   justify-content: center;
-  padding: 80px 50px 50px 50px; /* Tăng padding-top nhiều hơn */
+  padding: 80px 50px 50px 50px;
   overflow-y: auto;
+  position: relative;
+  z-index: 2;
 }
 
 /* Flip container */
@@ -50,7 +69,7 @@ html, body {
   width: 100%;
   max-width: 400px;
   height: auto;
-  margin-top: 20px; /* Thêm margin-top */
+  margin-top: 20px;
 }
 
 /* Flip card */
@@ -86,15 +105,16 @@ html, body {
   z-index: 2;
 }
 
-/* Title - GIẢM FONT SIZE */
+/* Title */
 .title {
-  font-size: 42px; /* Giảm từ 48px */
-  font-weight: bold;
+  font-size: 42px;
+  font-weight: 700;
   color: white;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
   text-align: center;
-  margin-bottom: 30px; /* Giảm margin */
+  margin-bottom: 35px;
   margin-top: 0;
+  line-height: 1.2;
   letter-spacing: 1px;
 }
 
@@ -107,28 +127,90 @@ html, body {
   display: block;
   color: white;
   font-size: 16px;
-  font-weight: bold;
-  margin-bottom: 6px; /* Giảm margin */
+  font-weight: 700;
+  margin-bottom: 8px;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* Input wrapper for icons */
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .form-field input {
   width: 100%;
-  padding: 14px 18px; /* Giảm padding */
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 12px;
-  font-size: 16px;
-  color: #333;
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(10px);
+  padding: 12px 16px;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 8px;
+  font-size: 15px;
+  color: #1E293B;
+  background: #FFFFFF;
   outline: none;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
+}
+
+.form-field input.with-icon-left {
+  padding-left: 44px;
+}
+
+.form-field input.with-icon-both {
+  padding-left: 44px;
+  padding-right: 44px;
+}
+
+/* Input icons */
+.input-icon {
+  position: absolute;
+  color: #94A3B8;
+  transition: color 0.2s ease;
+  z-index: 1;
+}
+
+.input-icon-left {
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* Form options (for checkbox) */
+.form-options {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.checkbox-label input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  padding: 0;
+  accent-color: #3B82F6;
+  cursor: pointer;
+}
+
+.checkbox-label input:disabled {
+  cursor: not-allowed;
 }
 
 .form-field input:focus:not(:disabled) {
-  border-color: #00BA96;
+  border-color: #3B82F6;
   background: rgba(255, 255, 255, 1);
-  box-shadow: 0 0 0 3px rgba(0, 186, 150, 0.3);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
   transform: translateY(-2px);
 }
 
@@ -164,8 +246,8 @@ html, body {
 }
 
 .message.success {
-  background: rgba(0, 186, 150, 0.2);
-  border: 2px solid rgba(0, 186, 150, 0.5);
+  background: rgba(59, 130, 246, 0.2);
+  border: 2px solid rgba(59, 130, 246, 0.5);
   color: white;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
 }
@@ -181,7 +263,7 @@ html, body {
 .sign-up-btn {
   width: 100%;
   padding: 16px; /* Giảm padding */
-  background: linear-gradient(135deg, #00BA96 0%, #00a085 100%);
+  background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
   color: white;
   border: none;
   border-radius: 12px;
@@ -190,13 +272,13 @@ html, body {
   cursor: pointer;
   margin-bottom: 25px; /* Giảm margin */
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0, 186, 150, 0.4);
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .sign-up-btn:hover:not(:disabled) {
   transform: translateY(-3px);
-  box-shadow: 0 6px 25px rgba(0, 186, 150, 0.6);
+  box-shadow: 0 6px 25px rgba(59, 130, 246, 0.6);
 }
 
 .sign-up-btn:disabled {
@@ -220,15 +302,18 @@ html, body {
   right: 0;
   height: 1px;
   background: rgba(255, 255, 255, 0.3);
+  z-index: 0;
 }
 
 .divider span {
   background: transparent;
   padding: 0 20px;
   color: white;
-  font-size: 15px; /* Giảm font size */
-  font-weight: bold;
+  font-size: 15px;
+  font-weight: 700;
+  position: relative;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  z-index: 1;
 }
 
 /* OAuth buttons */
@@ -253,7 +338,7 @@ html, body {
 
 .oauth-btn:hover:not(:disabled) {
   background: rgba(255, 255, 255, 1);
-  border-color: #00BA96;
+  border-color: #3B82F6;
   transform: translateY(-2px);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
 }
@@ -279,10 +364,10 @@ html, body {
 /* Sign in text */
 .signin-text {
   text-align: center;
-  margin-top: 20px; /* Giảm margin */
-  font-size: 15px; /* Giảm font size */
+  margin-top: 20px;
+  font-size: 15px;
   color: white;
-  font-weight: bold;
+  font-weight: 700;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
 }
 
@@ -291,8 +376,8 @@ html, body {
   background: none;
   border: none;
   text-decoration: underline;
-  font-weight: bold;
-  font-size: 15px; /* Giảm font size */
+  font-weight: 700;
+  font-size: 15px;
   cursor: pointer;
   margin-left: 6px;
   transition: all 0.3s ease;
@@ -301,7 +386,7 @@ html, body {
 }
 
 .signin-link:hover:not(:disabled) {
-  color: #00BA96;
+  color: #3B82F6;
   transform: scale(1.05);
 }
 

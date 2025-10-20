@@ -13,6 +13,7 @@ export default function SignUp({ onSwitchToLogin }) {
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
   const [isFlipping, setIsFlipping] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   // Load reCAPTCHA script trong useEffect
   useEffect(() => {
@@ -133,57 +134,90 @@ export default function SignUp({ onSwitchToLogin }) {
 
   return (
     <div className="signup-page">
-      
-      {/* Right side form with flip container */}
+      {/* Right side form - 40% */}
       <div className="form-section">
         <div className="flip-container">
           <div className={`flip-card ${isFlipping ? 'flipping' : ''}`}>
             <div className="signup-form-container">
               <div className="signup-form">
                 
-                <h1 className="title">Create Account</h1>
+                <h1 className="title">Sign Up</h1>
 
                 <form onSubmit={handleSubmit}>
                   
                   <div className="form-field">
                     <label>Email Address</label>
-                    <input
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      required
-                      placeholder="Enter your email"
-                      disabled={loading || isFlipping}
-                    />
+                    <div className="input-wrapper">
+                      <svg className="input-icon input-icon-left" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                        <polyline points="22,6 12,13 2,6"/>
+                      </svg>
+                      <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        required
+                        placeholder="Enter your email"
+                        disabled={loading || isFlipping}
+                        className="with-icon-left"
+                      />
+                    </div>
                   </div>
 
                   <div className="form-field">
                     <label>Password</label>
-                    <input
-                      type="password"
-                      name="password"
-                      value={formData.password}
-                      onChange={handleInputChange}
-                      required
-                      placeholder="Create a password"
-                      minLength="6"
-                      disabled={loading || isFlipping}
-                    />
+                    <div className="input-wrapper">
+                      <svg className="input-icon input-icon-left" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                      </svg>
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        name="password"
+                        value={formData.password}
+                        onChange={handleInputChange}
+                        required
+                        placeholder="Create a password"
+                        minLength="6"
+                        disabled={loading || isFlipping}
+                        className="with-icon-left"
+                      />
+                    </div>
                   </div>
 
                   <div className="form-field">
                     <label>Confirm Password</label>
-                    <input
-                      type="password"
-                      name="confirmPassword"
-                      value={formData.confirmPassword}
-                      onChange={handleInputChange}
-                      required
-                      placeholder="Confirm your password"
-                      minLength="6"
-                      disabled={loading || isFlipping}
-                    />
+                    <div className="input-wrapper">
+                      <svg className="input-icon input-icon-left" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                      </svg>
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        name="confirmPassword"
+                        value={formData.confirmPassword}
+                        onChange={handleInputChange}
+                        required
+                        placeholder="Confirm your password"
+                        minLength="6"
+                        disabled={loading || isFlipping}
+                        className="with-icon-left"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Checkbox Show Password */}
+                  <div className="form-options">
+                    <label className="checkbox-label">
+                      <input
+                        type="checkbox"
+                        checked={showPassword}
+                        onChange={(e) => setShowPassword(e.target.checked)}
+                        disabled={isFlipping}
+                      />
+                      Show password
+                    </label>
                   </div>
 
                   {message && (
