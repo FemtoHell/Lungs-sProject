@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import './DoctorDashboard.css';
 import AIDiagnosis from './AIDiagnosis';
 import PatientRecords from './PatientRecords';
+import DoctorSettings from './DoctorSettings';
+import UploadScan from './UploadScan';
+import Reports from './Reports';
 
 export default function DoctorDashboard({ user, onLogout }) {
   const [currentPage, setCurrentPage] = useState('dashboard');
@@ -124,91 +127,19 @@ export default function DoctorDashboard({ user, onLogout }) {
     return <AIDiagnosis user={user} onLogout={onLogout} onNavigate={setCurrentPage} />;
   }
 
-  // Render other pages (upload, reports, settings)
-  if (currentPage === 'upload' || currentPage === 'reports' || currentPage === 'settings') {
-    return (
-      <div className="doctor-dashboard">
-        <div className="doctor-top-header">
-          <div className="doctor-top-left">
-            <div className="doctor-logo-small">
-              <span className="logo-icon">🫁</span>
-              <span className="logo-text">MediDiagnose AI</span>
-            </div>
-          </div>
-          <div className="doctor-top-right">
-            <div className="notification-icon">
-              <span className="notification-bell">🔔</span>
-              <span className="notification-badge">3</span>
-            </div>
-            <div className="doctor-profile">
-              <div className="profile-avatar">
-                {getPatientAvatar(user?.full_name || user?.email)}
-              </div>
-              <div className="profile-info">
-                <div className="profile-name">Dr. {user?.full_name || user?.email?.split('@')[0] || 'Johnson'}</div>
-                <div className="profile-role">Radiologist</div>
-              </div>
-            </div>
-            <button className="logout-button" onClick={onLogout}>
-              Logout
-            </button>
-          </div>
-        </div>
+  // Render Settings page
+  if (currentPage === 'settings') {
+    return <DoctorSettings user={user} onLogout={onLogout} onNavigate={setCurrentPage} />;
+  }
 
-        <div className="doctor-main-layout">
-          <div className="doctor-sidebar">
-            <nav className="sidebar-nav">
-              <a href="#" className={`nav-item ${currentPage === 'dashboard' ? 'active' : ''}`} onClick={() => setCurrentPage('dashboard')}>
-                <span className="nav-icon">📊</span>
-                <span className="nav-text">Dashboard</span>
-              </a>
-              <a href="#" className={`nav-item ${currentPage === 'upload' ? 'active' : ''}`} onClick={() => setCurrentPage('upload')}>
-                <span className="nav-icon">⬆️</span>
-                <span className="nav-text">Upload Scan</span>
-              </a>
-              <a href="#" className={`nav-item ${currentPage === 'diagnosis' ? 'active' : ''}`} onClick={() => setCurrentPage('diagnosis')}>
-                <span className="nav-icon">🧠</span>
-                <span className="nav-text">AI Diagnosis</span>
-              </a>
-              <a href="#" className={`nav-item ${currentPage === 'patients' ? 'active' : ''}`} onClick={() => setCurrentPage('patients')}>
-                <span className="nav-icon">👥</span>
-                <span className="nav-text">Patient Records</span>
-              </a>
-              <a href="#" className={`nav-item ${currentPage === 'reports' ? 'active' : ''}`} onClick={() => setCurrentPage('reports')}>
-                <span className="nav-icon">📋</span>
-                <span className="nav-text">Reports</span>
-              </a>
-              <a href="#" className={`nav-item ${currentPage === 'settings' ? 'active' : ''}`} onClick={() => setCurrentPage('settings')}>
-                <span className="nav-icon">⚙️</span>
-                <span className="nav-text">Settings</span>
-              </a>
-            </nav>
-          </div>
+  // Render Upload Scan page
+  if (currentPage === 'upload') {
+    return <UploadScan user={user} onLogout={onLogout} onNavigate={setCurrentPage} />;
+  }
 
-          <div className="doctor-content-area">
-            <div className="page-content">
-              <h1 className="page-title">
-                {currentPage === 'upload' && 'Upload Scan'}
-                {currentPage === 'reports' && 'Reports'}
-                {currentPage === 'settings' && 'Settings'}
-              </h1>
-              <p className="page-description">
-                {currentPage === 'upload' && 'Upload medical scans and images for analysis.'}
-                {currentPage === 'reports' && 'View and generate medical reports.'}
-                {currentPage === 'settings' && 'Configure system and user preferences.'}
-              </p>
-              <div className="coming-soon">
-                <div className="coming-soon-icon">🚧</div>
-                <div className="coming-soon-text">This feature is coming soon...</div>
-                <button className="back-to-dashboard-btn" onClick={() => setCurrentPage('dashboard')}>
-                  Back to Dashboard
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+  // Render Reports page
+  if (currentPage === 'reports') {
+    return <Reports user={user} onLogout={onLogout} onNavigate={setCurrentPage} />;
   }
 
   // Render Dashboard (default)
@@ -218,8 +149,7 @@ export default function DoctorDashboard({ user, onLogout }) {
       <div className="doctor-top-header">
         <div className="doctor-top-left">
           <div className="doctor-logo-small">
-            <span className="logo-icon">🫁</span>
-            <span className="logo-text">MediDiagnose AI</span>
+            <img src="/images/DH_VLU.png" alt="VLU Logo" className="logo-image" />
           </div>
         </div>
         <div className="doctor-top-right">

@@ -3,7 +3,8 @@ import './App.css'
 import Login from './Login'
 import SignUp from './SignUp'
 import AdminDashboard from './AdminDashboard'
-import DoctorDashboard from './DoctorDashboard' // ✅ THÊM IMPORT
+import DoctorDashboard from './DoctorDashboard'
+import PatientDashboard from './PatientDashboard' // ✅ THÊM IMPORT
 
 function App() {
   const [currentPage, setCurrentPage] = useState('login');
@@ -23,8 +24,7 @@ function App() {
         if (data.user) {
           setUser(data.user);
           
-          // ✅ THÊM ROLE-BASED ROUTING
-          // Decode JWT để lấy role info chính xác
+          // ✅ ROLE-BASED ROUTING
           try {
             const payload = JSON.parse(atob(token.split('.')[1]));
             
@@ -35,8 +35,8 @@ function App() {
               console.log('👨‍⚕️ Doctor user detected, routing to DoctorDashboard');
               setCurrentPage('doctor-dashboard');
             } else {
-              console.log('👤 Patient user detected, routing to patient area');
-              setCurrentPage('patient-dashboard'); // Coming soon
+              console.log('👤 Patient user detected, routing to PatientDashboard');
+              setCurrentPage('patient-dashboard');
             }
           } catch (error) {
             console.error('Error decoding token for routing:', error);
@@ -70,7 +70,7 @@ function App() {
   const handleLoginSuccess = (userData) => {
     setUser(userData);
     
-    // ✅ THÊM ROLE-BASED ROUTING SAU LOGIN
+    // ✅ ROLE-BASED ROUTING SAU LOGIN
     const token = localStorage.getItem('token');
     if (token) {
       try {
@@ -83,7 +83,7 @@ function App() {
           console.log('👨‍⚕️ Doctor login success, routing to DoctorDashboard');
           setCurrentPage('doctor-dashboard');
         } else {
-          console.log('👤 Patient login success, routing to patient area');
+          console.log('👤 Patient login success, routing to PatientDashboard');
           setCurrentPage('patient-dashboard');
         }
       } catch (error) {
@@ -142,16 +142,10 @@ function App() {
       
       {/* ✅ PATIENT DASHBOARD - CHO REGULAR USERS */}
       {currentPage === 'patient-dashboard' && (
-        <div className="patient-coming-soon">
-          <div className="coming-soon-content">
-            <h1>👤 Patient Dashboard</h1>
-            <p>Patient interface is coming soon...</p>
-            <p>Welcome, {user?.full_name || user?.email || 'Patient'}!</p>
-            <button className="logout-btn" onClick={handleLogout}>
-              Logout
-            </button>
-          </div>
-        </div>
+        <PatientDashboard 
+          user={user} 
+          onLogout={handleLogout} 
+        />
       )}
     </div>
   )

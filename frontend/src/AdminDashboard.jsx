@@ -248,8 +248,7 @@ export default function AdminDashboard() {
       {/* Sidebar */}
       <div className="sidebar">
         <div className="logo">
-          <div className="logo-icon">🫁</div>
-          <h2>MediDiagnose AI</h2>
+          <img src="/images/DH_VLU.png" alt="VLU Logo" className="logo-image" />
         </div>
         
         <nav className="nav-menu">
